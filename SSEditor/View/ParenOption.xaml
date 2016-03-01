@@ -1,0 +1,77 @@
+﻿<Window x:Class="SSEditor.View.ParenOption"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SSEditor"
+        xmlns:behavior="clr-namespace:SSEditor.View.Behavior"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        mc:Ignorable="d"
+        Title="括弧記号オプション" Height="300" Width="350"
+        DataContext="{Binding Main, Source={StaticResource Locator}}"
+        Foreground="{Binding AppOption.UI_ForeGroundHex}"
+        Background="{Binding AppOption.UI_BackGroundHex}"
+        >
+    <Window.Resources>
+        
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="登録した括弧記号一覧"
+                   FontSize="22" HorizontalAlignment="Center"
+                   Margin="5"></TextBlock>
+        <DockPanel Grid.Row="1" Grid.Column="0" Margin="5">
+            <Button Content="リストで選んだ記号を削除" Margin="20,5,20,10" DockPanel.Dock="Bottom"
+                    Command="{Binding DeleteParenCom}">
+                <i:Interaction.Behaviors>
+                    <behavior:MessageOKCancelBehavior Message="削除してよろしいですか？"></behavior:MessageOKCancelBehavior>
+                </i:Interaction.Behaviors>
+            </Button>
+            <Button Content="選択を解除" Margin="20,5,20,0" DockPanel.Dock="Bottom"
+                    Command="{Binding UnselectParen}"></Button>
+
+            <ListView ItemsSource="{Binding Project.parens}" DockPanel.Dock="Top" 
+                      SelectedItem="{Binding AppContext.SelectedParen, Mode=Twoway}">
+            <ListView.View>
+                <GridView>
+                        <GridViewColumn Header="前" DisplayMemberBinding="{Binding start, UpdateSourceTrigger=PropertyChanged}"></GridViewColumn>
+                        <GridViewColumn Header="後" DisplayMemberBinding="{Binding end,UpdateSourceTrigger=PropertyChanged}"></GridViewColumn>
+                        <GridViewColumn Header="末尾" DisplayMemberBinding="{Binding extra, UpdateSourceTrigger=PropertyChanged}"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        </DockPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="3" VerticalAlignment="Stretch">
+            <TextBlock Text="新規登録・修正" HorizontalAlignment="Center" Margin="10"></TextBlock>
+            <DockPanel Margin="2">
+                <TextBlock Text="前記号   :  " VerticalAlignment="Center" x:Name="Paren_Start"></TextBlock>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.start}"></TextBox>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <TextBlock Text="後記号   :  " VerticalAlignment="Center" x:Name="Paren_End" ></TextBlock>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.end}"></TextBox>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <TextBlock Text="末尾記号:  " VerticalAlignment="Center"></TextBlock>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.extra}"></TextBox>
+            </DockPanel>
+            <Button Content ="新規登録" Margin="20,10,20,0" Command="{Binding AddModifiyParenCom}">
+
+            </Button>
+            <Grid>
+                <Button Content="閉じる" Margin ="20,20,20,0"  Width="60" HorizontalAlignment="Right"></Button>
+            </Grid> 
+            
+        </StackPanel>
+        
+    </Grid>
+</Window>
