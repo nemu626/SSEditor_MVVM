@@ -36,11 +36,14 @@
                     <behavior:MessageOKCancelBehavior Message="削除してよろしいですか？"></behavior:MessageOKCancelBehavior>
                 </i:Interaction.Behaviors>
             </Button>
-            <Button Content="選択を解除" Margin="20,5,20,0" DockPanel.Dock="Bottom"
-                    Command="{Binding UnselectParen}"></Button>
+            <CheckBox Content="修正モード"  HorizontalAlignment="Center" IsChecked="{Binding AppContext.ModifyParenModeFlag,Mode=TwoWay}"
+                      Foreground="{Binding AppOption.UI_ForeGroundHex}" DockPanel.Dock="Bottom"
+                      Margin="0,5,0,5">  </CheckBox>
 
             <ListView ItemsSource="{Binding Project.parens}" DockPanel.Dock="Top" 
-                      SelectedItem="{Binding AppContext.SelectedParen, Mode=Twoway}">
+                      SelectedItem="{Binding AppContext.SelectedParen, Mode=Twoway}"
+                      Focusable="{Binding AppContext.ModifyParenModeFlag, Mode=OneWay}"
+                      IsEnabled="{Binding AppContext.ModifyParenModeFlag}">
             <ListView.View>
                 <GridView>
                         <GridViewColumn Header="前" DisplayMemberBinding="{Binding start, UpdateSourceTrigger=PropertyChanged}"></GridViewColumn>
@@ -51,7 +54,7 @@
         </ListView>
         </DockPanel>
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="3" VerticalAlignment="Stretch">
-            <TextBlock Text="新規登録・修正" HorizontalAlignment="Center" Margin="10"></TextBlock>
+            <TextBlock Text="新規登録" HorizontalAlignment="Center" Margin="10"></TextBlock>
             <DockPanel Margin="2">
                 <TextBlock Text="前記号   :  " VerticalAlignment="Center" x:Name="Paren_Start"></TextBlock>
                 <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.start}"></TextBox>
@@ -64,11 +67,12 @@
                 <TextBlock Text="末尾記号:  " VerticalAlignment="Center"></TextBlock>
                 <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.extra}"></TextBox>
             </DockPanel>
-            <Button Content ="新規登録" Margin="20,10,20,0" Command="{Binding AddModifiyParenCom}">
+            <Button Content ="新規登録" Margin="20,10,20,0" Command="{Binding AddParenCom}">
 
             </Button>
             <Grid>
-                <Button Content="閉じる" Margin ="20,20,20,0"  Width="60" HorizontalAlignment="Right"></Button>
+                <Button Content="閉じる" Margin ="20,20,20,0"  Width="60" HorizontalAlignment="Right"
+                        IsCancel="True"></Button>
             </Grid> 
             
         </StackPanel>

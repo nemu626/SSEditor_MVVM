@@ -53,6 +53,7 @@ namespace SSEditor.ViewModel
             Project = new Project();
             AppOption = new AppOption();
             AppContext = new AppContext();
+            AppContext.SelectedParen = Parentheses.BASE_KAGI;
 
 
             TypeLineCom = new RelayCommand(AddModifyLine,
@@ -79,20 +80,17 @@ namespace SSEditor.ViewModel
                 () => AppContext.EditorMode == EditMode.modify  );
 
             #region Paren管理
-            AddModifiyParenCom = new RelayCommand(
+            AddParenCom = new RelayCommand(
                 () => { Project.parens.Add(appContext.SelectedParen);
                     appContext.SelectedParen = new Parentheses("", "", ""); },
-                () => { return (appContext != null && Project.parens.Contains(AppContext.SelectedParen));
+                () => { return (appContext != null && AppContext.ModifyParenModeFlag == false);
                 });
             DeleteParenCom = new RelayCommand<bool>(
                 (doExecute) => { if (doExecute) Project.parens.Remove(AppContext.SelectedParen);
                     appContext.SelectedParen = null; },
                 (doExecute) => { return (appContext != null && Project.parens.Contains(appContext.SelectedParen));
                 });
-            UnselectParenCom = new RelayCommand(
-                () => { appContext.SelectedParen = new Parentheses("", "", ""); },
-                () => { return (appContext != null && Project.parens.Contains(appContext.SelectedParen)); }
-                );
+
             #endregion
 
             #region Person管理
@@ -118,19 +116,14 @@ namespace SSEditor.ViewModel
         }
 
         #region Paren管理画面コマンド
-        public RelayCommand AddModifiyParenCom { get; private set; }
-        private void AddParenModifyParen()
-        {
-            if (appContext != null && !project.parens.Contains(appContext.SelectedParen))
-                project.parens.Add(appContext.SelectedParen);
-        }
+        public RelayCommand AddParenCom { get; private set; }
+
         public RelayCommand<bool> DeleteParenCom { get; private set; }
         private void DeleteParen()
         {
             if (appContext != null && project.parens.Contains(appContext.SelectedParen))
                 project.parens.Remove(AppContext.SelectedParen);
         }
-        public RelayCommand UnselectParenCom { get; private set; }
         #endregion
 
         #region Line管理コマンド
@@ -147,8 +140,7 @@ namespace SSEditor.ViewModel
             else if (AppContext.EditorMode == EditMode.modify)
             {
                 if (AppContext.SelectedLine.Modify(appContext.InputText, appContext.SelectedPerson))
-                    RaisePropertyChanged("project");
-                AppContext.EditorMode = EditMode.insert;
+                    RaisePropertyChanged("line");
             }
             else // AppContext.EditorMode == EditorMode.interpolate
                 project.AddLine(new Line(AppContext.InputText, AppContext.SelectedPerson, appContext.SelectedParen),

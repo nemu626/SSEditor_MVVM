@@ -173,16 +173,12 @@
                           SelectedValue="{Binding AppContext.SelectedParen, Mode=TwoWay}" DisplayMemberPath="startend" 
                           Grid.Row="0" Grid.Column="1" />
                 
-                <!--<RadioButton GroupName="EditorMode">挿入</RadioButton>
-                <RadioButton GroupName="EditorMode">割り込み</RadioButton>
-                <RadioButton GroupName="EditorMode">修正</RadioButton>-->
+
                 <ComboBox SelectedIndex="{Binding AppContext.EditorMode, Mode=TwoWay}" Grid.Row="0" Grid.Column="2">
-                    <ComboBoxItem Content="挿入"></ComboBoxItem>
+                    <ComboBoxItem Content="挿入" Selector.IsSelected="True"></ComboBoxItem>
                     <ComboBoxItem Content="修正"></ComboBoxItem>
                     <ComboBoxItem Content="割り込み"></ComboBoxItem>
                 </ComboBox>
-                <!--<CheckBox Grid.Row="0" Grid.Column="2" IsChecked="{Binding AppContext.InterruptModeFlag, Mode=TwoWay}" 
-                          Content="割り込みモード" Foreground="{Binding AppOption.UI_ForeGroundHex}"></CheckBox>-->
 
                 <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" 
                          Text="{Binding AppContext.InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 

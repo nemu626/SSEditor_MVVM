@@ -97,7 +97,6 @@
     <Compile Include="ViewModel\AppContext.cs" />
     <Compile Include="Model\AppOption.cs" />
     <Compile Include="Model\SSTFile.cs" />
-    <Compile Include="ViewModel\Commands.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Behavior\InputTextBoxBehavior.cs" />

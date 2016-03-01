@@ -13,45 +13,76 @@ using System.Windows.Input;
 namespace SSEditor
 {
     [Serializable]
-    public class Person
+    public class Person : INotifyPropertyChanged
     {
         public const int ID_DES = -2;
         public const int ID_UNDEFINED = -1;
         public static readonly Person DESCRIPT = new Person(-2, "");
-
+        #region コンストラクタ
         public Person()
         {
-            id = -1;
-            name = "noname";
+            _id = -1;
+            _name = "noname";
             font = new FontInfo();
 
 
             hotkey = new HotkeyInfo();
         }
-        public Person(int _id, string _name)
+        public Person(int id, string name)
         {
-            id = _id;
-            name = _name;
+            _id = id;
+            _name = name;
             font = new FontInfo();
-            hotkey = new HotkeyInfo();
+            _hotkey = new HotkeyInfo();
         }
-        public Person(int _id, string _name, ModifierKeys _modifier, Key _key)
+        public Person(int id, string name, ModifierKeys modifier, Key key)
         {
-            id = _id;
-            name = _name;
+            _id = id;
+            _name = name;
             font = new FontInfo();
-            hotkey = new HotkeyInfo(true, _modifier, _key);
+            _hotkey = new HotkeyInfo(true, modifier, key);
         }
-        public int id { get; set; }
-        public string name { get; set; }
-        public HotkeyInfo hotkey { get; set; }
+        #endregion
+
+        private int _id;
+        public int id { get { return _id; } set
+            {
+                _id = value;
+                OnPropertyChanged("id");
+            }
+        }
+        private string _name;
+        public string name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged("name");
+            }
+        }
+        private HotkeyInfo _hotkey;
+        public HotkeyInfo hotkey { get { return _hotkey; } set
+            {
+                _hotkey = value;
+                OnPropertyChanged("hotkey");
+            } }
         
 
         /// <summary>
         /// 解決する必要あり
         /// </summary>
         private SerializableFontInfo _font_serializable;
-        [XmlIgnore]
+
+
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
         public FontInfo font
         {
             get
@@ -63,7 +94,6 @@ namespace SSEditor
                 _font_serializable = new SerializableFontInfo(value);
             }
         }
-        
     }
 
     [Serializable]

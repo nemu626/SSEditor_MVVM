@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,36 +8,59 @@ using System.Threading.Tasks;
 namespace SSEditor
 {
     [Serializable]
-    public class Line
+    public class Line : INotifyPropertyChanged
     {
         //static readonly int paren_angles = 1;   //「」
         //static readonly int paren_doublequotation = 2; //""
         //static readonly int paren_parentheses = 3; //()
         //static readonly int paren_backets = 4; //[]
         //static readonly int paren_usercustom = 5; //custom
-        public string line { get; set; }
-        public Person speaker { get; set; }
-        public Parentheses paren { get; set; }
+        private string _line;
+        public string line
+        {
+            get { return _line; }
+            set
+            {
+                _line = value;
+                OnPropertyChanged("line");
+            }
+        }
+        private Person _speaker;
+        public Person speaker
+        {
+            get { return _speaker; }
+            set
+            {
+                _speaker = value;
+                OnPropertyChanged("speaker");
+            }
+        }
+        private Parentheses _paren;
+        public Parentheses paren { get { return _paren; } set
+            {
+                _paren = value;
+                OnPropertyChanged("paren");
+            }
+        }
 
         public Line()
         {
-            line = null;
-            speaker = new Person();
-            paren = Parentheses.BASE_KAGI;
+            _line = null;
+            _speaker = new Person();
+            _paren = Parentheses.BASE_KAGI;
         }
         public Line(string lineStr, Person lineSpeaker)
         {
-            line = lineStr;
-            this.speaker = lineSpeaker;
-            paren = Parentheses.BASE_KAGI;
+            _line = lineStr;
+            _speaker = lineSpeaker;
+            _paren = Parentheses.BASE_KAGI;
         }
         public Line(string lineStr, Person lineSpeaker, Parentheses lineparen)
         {
-            line = lineStr;
-            this.speaker = lineSpeaker;
-            paren = lineparen;
+            _line = lineStr;
+            _speaker = lineSpeaker;
+            _paren = lineparen;
         }
-
         public string Line2String()
         {
             if( speaker != null && speaker.name != null)
@@ -58,6 +82,13 @@ namespace SSEditor
                 return true;
             }
 
+        }
+        [field:NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
 
 

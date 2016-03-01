@@ -122,6 +122,19 @@ namespace SSEditor.ViewModel
                 OnPropertyChanged("SelectedParen");
             }
         }
+        private bool modifyParenModeFlag;
+        public bool ModifyParenModeFlag
+        {
+            get { return modifyParenModeFlag; }
+            set
+            {
+                modifyParenModeFlag = value;
+                //Add Modeになった場合SelectedParenを新しく取得する
+                if (value == false)
+                    SelectedParen = new Parentheses("", "", "");
+                OnPropertyChanged("ModifyParenModeFlag");
+            }
+        }
 
         #endregion
 
@@ -132,10 +145,11 @@ namespace SSEditor.ViewModel
             filePath = "";
             EditorMode = EditMode.insert;
             selectedPerson = null;
+            selectedParen = null;
             selectedLine = null;
             inputText = "";
+            modifyParenModeFlag = true;
 
-            selectedParen = null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
