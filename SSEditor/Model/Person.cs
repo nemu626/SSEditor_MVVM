@@ -17,7 +17,7 @@ namespace SSEditor
     {
         public const int ID_DES = -2;
         public const int ID_UNDEFINED = -1;
-        public static readonly Person DESCRIPT = new Person(-2, "");
+        public static readonly Person DESCRIPT = new Person(ID_DES, "");
         #region コンストラクタ
         public Person()
         {

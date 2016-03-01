@@ -66,7 +66,8 @@
                         <RowDefinition Height="10*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="登場人物" FontSize="22" Background="{Binding AppOption.UI_BackGroundHex}" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
+                    <TextBlock Text="登場人物" FontSize="22" 
+                               Background="{Binding AppOption.UI_BackGroundHex}" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
                                Grid.Row="0" FontWeight="Bold" TextAlignment="Center" LineHeight="22" VerticalAlignment="Center">
                     </TextBlock>
                     <Button Name="newPerson" Content="登場人物を追加"  Click="AddPersoNclicked"  Grid.Row="1"></Button>
@@ -111,11 +112,11 @@
                             <ContentControl>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDoubleClick">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, Path=DataContext.SetModifyModeCom}"></i:InvokeCommandAction>
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBox}}, 
+                                            Path=DataContext.SetModifyModeCom}"></i:InvokeCommandAction>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <Grid Margin="5" HorizontalAlignment="Stretch"  Name="HukidasiGrid">
-
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="80"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -123,10 +124,22 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" HorizontalAlignment="Stretch" Foreground="White" Text="{Binding speaker.name}" 
                                            VerticalAlignment="Bottom" TextWrapping="Wrap" ></TextBlock>
-                                    <Border Name="BlockEditor_HukidasiBorder" Grid.Column="1" DockPanel.Dock="Right" BorderBrush="{Binding speaker.font.BrushColor}" 
-                                        BorderThickness="5"  Background="#FF2D2D30" CornerRadius="15,15,15,0" 
-                                        HorizontalAlignment="Stretch" 
-                                        >
+                                    <Border Name="BlockEditor_HukidasiBorder" Grid.Column="1" 
+                                        DockPanel.Dock="Right" BorderBrush="{Binding speaker.font.BrushColor}" 
+                                         Background="#FF2D2D30"
+                                        HorizontalAlignment="Stretch">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderThickness" Value="5"></Setter>
+                                                <Setter Property="CornerRadius" Value="15,15,15,0"></Setter>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding speaker.id}" Value="-2">
+                                                        <Setter Property="BorderThickness" Value="0"></Setter>
+                                                        <Setter Property="CornerRadius" Value="0,0,0,0"></Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
                                         <TextBlock Text="{Binding line, Mode=OneWay}" 
                                                TextWrapping="Wrap" Padding="5" MinHeight="20" VerticalAlignment="Center" HorizontalAlignment="Stretch"
                                                FontFamily="{Binding speaker.font.Family}" 
