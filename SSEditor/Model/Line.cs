@@ -100,6 +100,7 @@ namespace SSEditor
         public static readonly Parentheses BASE_PAREN = new Parentheses("(", ")", "");
         public static readonly Parentheses BASE_EMPTY = new Parentheses("", "", "");
         public static readonly Parentheses BASE_QUO = new Parentheses("\"", "\"", "");
+        public static readonly Parentheses BASE_COLON = new Parentheses(" : ", "", "");
 
         public string start { get; set; }
         public string end { get; set; }

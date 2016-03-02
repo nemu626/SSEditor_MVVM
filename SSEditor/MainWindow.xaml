@@ -75,7 +75,8 @@
                     <Button Name="deletePerson" Content="選択した人物を削除" Grid.Row="3"
                             Command="{Binding DeletePersonCom}">
                         <i:Interaction.Behaviors>
-                            <behaviors:MessageOKCancelBehavior Message="削除してよろしいですか？"></behaviors:MessageOKCancelBehavior>
+                            <behaviors:MessageOKCancelBehavior Message="この人物と発言が全て削除されます。\r\n よろしいですか？">
+                            </behaviors:MessageOKCancelBehavior>
                         </i:Interaction.Behaviors>
                     </Button>
 
@@ -107,6 +108,14 @@
                          Name="TextLineBlocks" ItemsSource="{Binding Project.lines}"  VerticalAlignment="Top"
                          SelectedItem="{Binding AppContext.SelectedLine, Mode=Twoway}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ContextMenu>
+                        <ContextMenu >
+                            <MenuItem Header="この行を修正" Command="{Binding SetModifyModeCom}"></MenuItem>
+                            <MenuItem Header="この行を削除" Command="{Binding DeleteLineCom}">
+                            </MenuItem>
+                            <MenuItem Header="この行の後ろに行を追加(割り込み)" Command="{Binding SetInterpolateModeCom}"></MenuItem>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <ContentControl>
@@ -117,6 +126,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <Grid Name="HukidasiGrid" Margin="5,5,5,5">
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="80"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>

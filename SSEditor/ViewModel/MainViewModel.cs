@@ -55,7 +55,7 @@ namespace SSEditor.ViewModel
             AppContext = new AppContext();
             AppContext.SelectedParen = Parentheses.BASE_KAGI;
 
-
+            #region Line管理コマンド
             TypeLineCom = new RelayCommand(AddModifyLine,
                 () => (appContext.SelectedPerson != null && appContext.SelectedParen != null));
             TypeDescriptCom = new RelayCommand(
@@ -69,27 +69,47 @@ namespace SSEditor.ViewModel
                     AppContext.SelectedParen = paren;
                 },
                 () => !string.IsNullOrEmpty(AppContext.InputText));
+            #endregion
 
+            #region Mode管理コマンド
             SetModifyModeCom = new RelayCommand(
                 () =>
                 {
+                    AppContext.EditorMode = (int)EditMode.modify;
                     AppContext.InputText = AppContext.SelectedLine.line;
                     AppContext.SelectedPerson = AppContext.SelectedLine.speaker;
                     AppContext.SelectedParen = AppContext.SelectedLine.paren;
                 },
-                () => AppContext.EditorMode == EditMode.modify  );
+                () => AppContext.SelectedLine != null && 
+                (       (AppContext.EditorMode == (int)EditMode.modify ) 
+                        ||(AppContext.EditorMode == (int)EditMode.insert && AppContext.InputText == "")) );
+
+            SetInterpolateModeCom = new RelayCommand(
+                () => { AppContext.EditorMode = (int)EditMode.interpolate; },
+                () => (AppContext != null && Project.lines.Contains(appContext.SelectedLine))
+                );
+            #endregion
+
+
+            DeleteLineCom = new RelayCommand(
+                () =>
+                {
+                    if (true) Project.RemoveLine(AppContext.SelectedLine);
+                    AppContext.SelectedLine = null;
+                },
+                () => (AppContext.SelectedLine != null && Project.lines.Contains(AppContext.SelectedLine))
+                );
 
             #region Paren管理
             AddParenCom = new RelayCommand(
-                () => { Project.parens.Add(appContext.SelectedParen);
-                    appContext.SelectedParen = new Parentheses("", "", ""); },
-                () => { return (appContext != null && AppContext.ModifyParenModeFlag == false);
+                () => { Project.parens.Add(AppContext.SelectedParen);
+                    AppContext.SelectedParen = new Parentheses("", "", ""); },
+                () => { return (AppContext.SelectedParen != null && AppContext.ModifyParenModeFlag == false);
                 });
             DeleteParenCom = new RelayCommand<bool>(
                 (doExecute) => { if (doExecute) Project.parens.Remove(AppContext.SelectedParen);
-                    appContext.SelectedParen = null; },
-                (doExecute) => { return (appContext != null && Project.parens.Contains(appContext.SelectedParen));
-                });
+                    AppContext.SelectedParen = null; },
+                (doExecute) => (AppContext.SelectedParen != null && Project.parens.Contains(AppContext.SelectedParen)));
 
             #endregion
 
@@ -127,27 +147,31 @@ namespace SSEditor.ViewModel
         #endregion
 
         #region Line管理コマンド
-        public RelayCommand TypeLineCom { get; private set; }
-        public RelayCommand TypeDescriptCom { get; private set; }
-        public RelayCommand DeleteLineCom { get; private set; } //未実装
-
-        public RelayCommand SetModifyModeCom { get; private set; }
-
         private void AddModifyLine()
         {
-            if (AppContext.EditorMode == EditMode.insert)
+            if (AppContext.EditorMode == (int)EditMode.insert)
                 project.AddLine(new Line(AppContext.InputText, AppContext.SelectedPerson, appContext.SelectedParen));
-            else if (AppContext.EditorMode == EditMode.modify)
+            else if (AppContext.EditorMode == (int)EditMode.modify)
             {
-                if (AppContext.SelectedLine.Modify(appContext.InputText, appContext.SelectedPerson))
+                if (AppContext.SelectedLine != null &&
+                    AppContext.SelectedLine.Modify(appContext.InputText, appContext.SelectedPerson))
                     RaisePropertyChanged("line");
             }
-            else // AppContext.EditorMode == EditorMode.interpolate
+            else// AppContext.EditorMode == EditorMode.interpolate
                 project.AddLine(new Line(AppContext.InputText, AppContext.SelectedPerson, appContext.SelectedParen),
                     AppContext.SelectedLine);
-
             AppContext.InputText = "";
         }
+        public RelayCommand TypeLineCom { get; private set; }
+        public RelayCommand TypeDescriptCom { get; private set; }
+        public RelayCommand DeleteLineCom { get; private set; } 
+        #endregion
+
+        #region Mode管理コマンド
+        public RelayCommand SetModifyModeCom { get; private set; }
+        public RelayCommand SetInterpolateModeCom { get; private set; }
+
+
         #endregion
 
         #region Person管理
@@ -168,9 +192,7 @@ namespace SSEditor.ViewModel
         }
         #endregion
 
-        public void ShowMessageDialog(string msg)
-        {
-            
-        }
+
+
     }
 }

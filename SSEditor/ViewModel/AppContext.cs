@@ -66,12 +66,12 @@ namespace SSEditor.ViewModel
         //}
 
         private EditMode editorMode;
-        public EditMode EditorMode
+        public int EditorMode
         {
-            get { return editorMode; }
+            get { return (int)editorMode; }
             set
             {
-                editorMode = value;
+                editorMode = (EditMode)value;
                 OnPropertyChanged("EditorMode");
             }
         }
@@ -143,7 +143,7 @@ namespace SSEditor.ViewModel
         {
             fileName = "";
             filePath = "";
-            EditorMode = EditMode.insert;
+            EditorMode = (int)EditMode.insert;
             selectedPerson = null;
             selectedParen = null;
             selectedLine = null;

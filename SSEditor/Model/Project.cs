@@ -57,6 +57,7 @@ namespace SSEditor
             parens.Add(Parentheses.BASE_PAREN);
             parens.Add(Parentheses.BASE_EMPTY);
             parens.Add(Parentheses.BASE_QUO);
+            parens.Add(Parentheses.BASE_COLON);
 
 
             this.text = "";
