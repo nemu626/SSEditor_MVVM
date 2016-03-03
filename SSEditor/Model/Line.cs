@@ -61,9 +61,9 @@ namespace SSEditor
             _speaker = lineSpeaker;
             _paren = lineparen;
         }
-        public string Line2String()
+        public string Line2String(bool speakerFlag = true)
         {
-            if( speaker != null && speaker.name != null)
+            if( speaker != null && speaker.name != null && speakerFlag)
                 return speaker.name + paren.EncloseString(line) + Environment.NewLine;
             else
                 return paren.EncloseString(line) + Environment.NewLine;

@@ -40,6 +40,7 @@
             </MenuItem>
             <MenuItem Header="オプション(_O)">
                 <MenuItem x:Name="SetParenMenu" Header="括弧の設定" ToolTip="Option for Paren" Click="MenuHandler_Click"></MenuItem>
+                <MenuItem x:Name="SetDisplaySpeaker" Header="プレーンエディタに登場人物名を表記する" IsCheckable="True" IsChecked="{Binding Project.displaySpeakerFlag}"></MenuItem>
             </MenuItem>
         </Menu>
 

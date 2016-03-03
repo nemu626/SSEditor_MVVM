@@ -27,12 +27,22 @@ namespace SSEditor
         public ObservableCollection<Person> people { get; set; }
         public ObservableCollection<Line> lines { get; set; }
         public ObservableCollection<Parentheses> parens { get; set; }
+
+        private bool _displaySpeakerFlag;
+        public bool displaySpeakerFlag
+        {
+            get { return _displaySpeakerFlag; }
+            set { _displaySpeakerFlag = value;
+                OnPropertyChanged("displaySpeakerFlag");
+                OnPropertyChanged("text");
+            }
+        }
         private string _text;
         public string text {
             get
             {
-                if(_text != Lines2Text())
-                    text = Lines2Text();
+                if(_text != Lines2Text(displaySpeakerFlag))
+                    text = Lines2Text(displaySpeakerFlag);
                 return _text;
             }
             set
@@ -52,6 +62,7 @@ namespace SSEditor
             this.people = new ObservableCollection<Person>();
             this.lines = new ObservableCollection<Line>();
             this.parens = new ObservableCollection<Parentheses>();
+            this.displaySpeakerFlag = true;
             people.Add(Person.DESCRIPT);
             parens.Add(Parentheses.BASE_KAGI);
             parens.Add(Parentheses.BASE_PAREN);
@@ -75,11 +86,11 @@ namespace SSEditor
                 PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-        public string Lines2Text()
+        public string Lines2Text(bool speakerFlag = true)
         {
             StringBuilder sb = new StringBuilder();
             foreach(Line l in lines)
-                sb.Append(l.Line2String());
+                sb.Append(l.Line2String(speakerFlag));
             return sb.ToString();
         }
         public bool AddPerson(Person p)

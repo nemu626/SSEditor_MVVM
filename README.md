@@ -14,7 +14,10 @@ Ctrl + Enterで地の文入力
 
 ----
 ライセンス
-CopyRight(c)2016 nemu626
+CopyRight(c)2016 nemu626@github
+
+yamada0626@gmail.com
+
 このソフトフェアはMITライセンスにより配布されます。
 
 https://opensource.org/licenses/mit-license.php
@@ -42,13 +45,12 @@ toDoList
 + Animation機能
 + コメントを書く
 + 人物情報修正
-
 + タブエディタ化
 + テーマ機能の実装
 + Text -> LinesへのParse機能(←正規表現)
 + プラグイン
 + Undo,Redo機能（←Memento pattern勉強)
-
++ プレーンエディタに登場人物非表示
 + ~~地の文を吹き出しではなく違う見た目に~~ 完了
 + ~~文章修正時に吹き出しの台詞自動更新。(LineクラスのInotify継承)~~ 完了
 + ~~Line Delete~~完了
