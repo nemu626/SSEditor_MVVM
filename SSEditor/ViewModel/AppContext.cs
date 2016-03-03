@@ -141,7 +141,7 @@ namespace SSEditor.ViewModel
 
         public AppContext()
         {
-            fileName = "";
+            fileName = "Untitled";
             filePath = "";
             EditorMode = (int)EditMode.insert;
             selectedPerson = null;

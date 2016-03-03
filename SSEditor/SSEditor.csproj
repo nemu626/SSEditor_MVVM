@@ -108,6 +108,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\TabContext.cs" />
     <Compile Include="ViewModel\AppContext.cs" />
     <Compile Include="Model\AppOption.cs" />
     <Compile Include="Model\SSTFile.cs" />

@@ -43,6 +43,9 @@
                 <MenuItem x:Name="SetDisplaySpeaker" Header="プレーンエディタに登場人物名を表記する" IsCheckable="True" IsChecked="{Binding Project.displaySpeakerFlag}"></MenuItem>
             </MenuItem>
         </Menu>
+        <TabControl DockPanel.Dock="Top" Height="25" ItemsSource="{Binding TabNames}" SelectedIndex="{Binding CurrentTabIdx}">
+
+        </TabControl>
 
 
         <Grid DockPanel.Dock="Bottom">

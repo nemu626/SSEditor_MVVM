@@ -70,24 +70,23 @@ namespace SSEditor
         #region MenuBar 関連操作メソッド
         private void New()
         {
-            vm.AppContext.FileName = "Untitled";
-            vm.AppContext.FilePath = null;
-            vm.Project = new Project();
+            vm.AddTab(new ViewModel.TabContext());
+            vm.CurrentTabIdx++;
             UpdateHotkeys();
-
         }
         private void Open()
         {
             var dlg = SSTFile.DlgFilterSST(new OpenFileDialog(), vm.AppContext.FileName);
 
-            if (dlg.ShowDialog() == true)
+            if (dlg.ShowDialog() == true &&
+                (vm.AddTab(new ViewModel.TabContext(SSTFile.Open(dlg.FileName), new ViewModel.AppContext()))))
             {
+                vm.CurrentTabIdx = vm.CurrentTabIdx + 1;
                 vm.AppContext.FilePath = dlg.FileName;
                 vm.AppContext.FileName = new FileInfo(vm.AppContext.FilePath).Name;
-                vm.Project = SSTFile.Open(vm.AppContext.FilePath);
                 vm.Project.title = vm.AppContext.FileName;
-                Focus2InputTextBox();
             }
+            Focus2InputTextBox();
             UpdateHotkeys();
         }
         private void Save()
