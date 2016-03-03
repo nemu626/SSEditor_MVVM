@@ -22,20 +22,11 @@ namespace SSEditor
     {
 
         private ViewModel.MainViewModel vm;
-        public Person person{ get; set; }
-
-        public Person[] ctrl_Hotkey;
-        public Person[] alt_Hotkey;
 
         public AddPersonDialog()
         {
             InitializeComponent();
           　vm = this.DataContext as ViewModel.MainViewModel;
-            
-            hotkeyCombobox.IsEnabled = false;
-            person = new Person();
-            ctrl_Hotkey = null;
-            alt_Hotkey = null;
         }
 
         private void clickFontChoosebutton(object sender, RoutedEventArgs e)
@@ -43,58 +34,32 @@ namespace SSEditor
             ColorFontDialog dlg = new ColorFontDialog();
             dlg.Owner = this;
             dlg.Font = FontInfo.GetControlFont(sampleTextBlock);
-            if (dlg.ShowDialog() == true)
-            {
-                if (dlg.Font != null)
-                {
-                    person.font = dlg.Font;
-                    FontInfo.ApplyFont(this.sampleTextBlock, person.font);
-                }
-            }
+            if (dlg.ShowDialog() == true && dlg.Font != null)
+                    vm.AppContext.SelectedPerson.font = dlg.Font;
         }
         private void clickOKbutton(object sender, RoutedEventArgs e)
         {
-            person.name = personName.Text;
-
-            if (person.hotkey.enable)
+            if (vm.AppContext.SelectedPerson.hotkey.enable)
             {
-                person.hotkey.key = hotkeyCombobox.SelectedIndex + Key.D0;
-            }
+                if ((bool)altradio.IsChecked)
+                    vm.AppContext.SelectedPerson.hotkey.Modifiers = ModifierKeys.Alt;
+                else if ((bool)ctrlradio.IsChecked)
+                    vm.AppContext.SelectedPerson.hotkey.Modifiers = ModifierKeys.Control;
+                else
+                    vm.AppContext.SelectedPerson.hotkey.enable = false;
 
+                if (hotkeyCombobox.SelectedIndex >= 0 && hotkeyCombobox.SelectedIndex < 10)
+                    vm.AppContext.SelectedPerson.hotkey.key = hotkeyCombobox.SelectedIndex + Key.D0;
+                else
+                    vm.AppContext.SelectedPerson.hotkey.enable = false;
+
+
+            }
             this.DialogResult = true;
         }
         private void clickCancelbutton(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
-        }
-
-        private void altclick(object sender, RoutedEventArgs e)
-        {
-            person.hotkey.enable = true;
-            person.hotkey.Modifiers = ModifierKeys.Alt;
-            hotkeyCombobox.Items.Clear();
-            for (int i = 0; i < 10; i++)
-                if (alt_Hotkey[i] == null)
-                    hotkeyCombobox.Items.Add(i);
-            hotkeyCombobox.IsEnabled = true;
-        }
-
-        private void ctrlclick(object sender, RoutedEventArgs e)
-        {
-            person.hotkey.enable = true;
-            person.hotkey.Modifiers = ModifierKeys.Control;
-            hotkeyCombobox.Items.Clear();
-            for(int i = 0; i< 10; i++)
-                if(ctrl_Hotkey[i] == null)
-                    hotkeyCombobox.Items.Add(i);
-
-            hotkeyCombobox.IsEnabled = true;
-        }
-
-        private void unuseClick(object sender, RoutedEventArgs e)
-        {
-            person.hotkey.enable = false;
-            hotkeyCombobox.IsEnabled = false;
         }
     }
 

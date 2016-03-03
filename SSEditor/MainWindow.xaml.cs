@@ -46,14 +46,25 @@ namespace SSEditor
         private void AddPersoNclicked(object sender, RoutedEventArgs e)
         {
             AddPersonDialog d = new AddPersonDialog();
-            d.ctrl_Hotkey = vm.Project.ctrlHotkey;
-            d.alt_Hotkey = vm.Project.altHotkey;
-            
+            vm.AppContext.SelectedPerson = new Person();
             if(d.ShowDialog() == true)
             {
-                vm.Project.AddPerson(d.person);
-                vm.AppContext.SelectedPerson = d.person;
-                AddHotkey(d.person);
+                vm.Project.AddPerson(vm.AppContext.SelectedPerson);
+                AddHotkey(vm.AppContext.SelectedPerson);
+            }
+        }
+        private void ModifyPersonclicked(object sender, RoutedEventArgs e)
+        {
+            AddPersonDialog d = new AddPersonDialog();
+            var p = vm.AppContext.SelectedPerson;
+            if (p == null)
+                return;
+            vm.AppContext.SelectedPerson = new Person(vm.AppContext.SelectedPerson);
+            if (d.ShowDialog() == true)
+            {
+                vm.Project.people[vm.Project.people.IndexOf(p)] = vm.AppContext.SelectedPerson;
+                UpdateHotkeys();
+                
             }
         }
         #region MenuBar 関連操作メソッド
@@ -204,7 +215,6 @@ namespace SSEditor
                 InputBindings.Add(new KeyBinding(vm.TypeDescriptCom, Key.Enter, ModifierKeys.Control));
             }
             
-
             //CusTom HotKey : "Mod + Key = Select Person & Focus to InputTextBox"
             if (vm != null && vm.Project != null)
                 foreach (Person p in vm.Project.people)

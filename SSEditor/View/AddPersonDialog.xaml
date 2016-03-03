@@ -5,45 +5,91 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SSEditor"
         mc:Ignorable="d"
-        Title="登場人物追加" Height="300" Width="500"
+        Title="登場人物" Height="300" Width="500"
         DataContext="{Binding Main, Source={StaticResource Locator}}"
         Foreground="{Binding AppOption.UI_ForeGroundHex}"
         Background="{Binding AppOption.UI_BackGroundHex}">
+    <Window.Resources>
+        <local:Person x:Key="newPerson"></local:Person>
+    </Window.Resources>
 
+    <Window.Style>
+        <Style TargetType="Window">
+            <Setter Property="Foreground" Value="{Binding AppOption.UI_ForeGroundHex}"></Setter>
+            <Setter Property="Background" Value="{Binding AppOption.UI_BackGroundHex}"></Setter>
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </Window.Style>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="47*"/>
-            <RowDefinition Height="88*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="90*"/>
-            <ColumnDefinition Width="143*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="personName" HorizontalAlignment="Left" Height="34" Margin="0.333,12,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="226" Grid.Column="1"/>
-        <TextBlock x:Name="名前" HorizontalAlignment="Left" Margin="76,21,0,0" TextWrapping="Wrap" Text="名前" VerticalAlignment="Top" Height="23" Width="80" FontSize="16"/>
+
+        <TextBlock x:Name="名前" Grid.Row="0" Grid.Column="0"
+                   Text="名前" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox x:Name="personName" Grid.Row="0" Grid.Column="1"
+                 TextWrapping="Wrap" Text="{Binding AppContext.SelectedPerson.name}" 
+                 Height="36" Width="200" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+        <TextBlock x:Name="textBlock" Grid.Row="1" Grid.Column="0"
+                   Text="ショートカットキー" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <StackPanel VerticalAlignment="Center">
+                <RadioButton x:Name="UseRadio" Content="使う" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
+                             IsChecked="{Binding AppContext.SelectedPerson.hotkey.enable}"/>
+                <RadioButton x:Name="unuseradio" Content="使わない" Foreground="{Binding AppOption.UI_ForeGroundHex}"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center">
+                <RadioButton x:Name="altradio" Content="Alt" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
+                             IsEnabled="{Binding AppContext.SelectedPerson.hotkey.enable}"/>
+                <RadioButton x:Name="ctrlradio" Content="Ctrl" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
+                             IsEnabled="{Binding AppContext.SelectedPerson.hotkey.enable}"/>
+            </StackPanel>
+            <TextBlock x:Name="textBlock1"  Grid.Row ="1" Grid.Column="1" 
+                   TextWrapping="Wrap" Text=" ＋ " VerticalAlignment="Center"/>
+            <ComboBox x:Name="hotkeyCombobox" Grid.Row="1" Grid.Column="1" 
+                      VerticalAlignment="Center" Width="60" Height="30"
+                      IsEnabled="{Binding AppContext.SelectedPerson.hotkey.enable}">
+                <ComboBoxItem Content="0"/> 
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+            </ComboBox>
+        </StackPanel>
 
 
-
-        <Button x:Name="AddpersonOK" IsDefault="True" Content="追加" HorizontalAlignment="Left" Margin="112,117.667,0,0" VerticalAlignment="Top" Width="97" Grid.ColumnSpan="2" Click="clickOKbutton" Grid.Row="1"/>
-        <Button x:Name="AddpersonCancel" IsCancel="True" Content="キャンセル" Grid.Column="1" HorizontalAlignment="Right" Margin="0,117.667,150.333,0" VerticalAlignment="Top" Width="87" Click="clickCancelbutton" Grid.Row="1"/>
-        <Button x:Name="ChooseFont" Content="フォント設定" HorizontalAlignment="Left" Margin="33,44.667,0,0" VerticalAlignment="Top" Width="136" Click="clickFontChoosebutton" Grid.Row="1"/>
-        <TextBox x:Name="sampleTextBlock" Grid.Column="1" HorizontalAlignment="Left" Height="76" Margin="6.333,25.667,0,0" TextWrapping="Wrap" Text="設定したフォントがここに表示されます" VerticalAlignment="Top" Width="191" Grid.Row="1"
+        <Button x:Name="ChooseFont" Grid.Row="2" Grid.Column="0"
+                Content="フォント設定" Click="clickFontChoosebutton"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Width="120" Height="30"/>
+        <TextBox x:Name="sampleTextBlock" Grid.Row="2" Grid.Column="1" Margin="5" BorderThickness="3"
+                 TextWrapping="Wrap" Text="設定したフォントがここに表示されます" Padding="3"
                  Background="{Binding AppOption.BlocksEditor_BackGroundHex}"
-                 />
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="47,74,0,0" TextWrapping="Wrap" Text="ショートカットキー" VerticalAlignment="Top" Height="40" Width="109" FontSize="16" Grid.RowSpan="2"/>
-        <RadioButton  Foreground="{Binding AppOption.UI_ForeGroundHex}" GroupName="G1" x:Name="altradio" Content="Alt" Grid.Column="1" HorizontalAlignment="Left" Margin="6.333,2.667,0,0" VerticalAlignment="Top" Checked="altclick" Width="39" Grid.Row="1">
-            <RadioButton.BindingGroup>
-                <BindingGroup/>
-            </RadioButton.BindingGroup>
-        </RadioButton>
-        <RadioButton Foreground="{Binding AppOption.UI_ForeGroundHex}" GroupName="G1" x:Name="ctrlradio" Content="Ctrl" Grid.Column="1" HorizontalAlignment="Left" Margin="6.333,74,0,0" VerticalAlignment="Top" Checked="ctrlclick">
-            <RadioButton.BindingGroup>
-                <BindingGroup/>
-            </RadioButton.BindingGroup>
-        </RadioButton>
-        <TextBlock x:Name="textBlock1" Grid.Column="1" HorizontalAlignment="Left" Margin="65.333,88,0,0" TextWrapping="Wrap" Text="＋" VerticalAlignment="Top" Grid.RowSpan="2"/>
-        <ComboBox x:Name="hotkeyCombobox" Grid.Column="1" HorizontalAlignment="Left" Margin="96.333,80,0,0" VerticalAlignment="Top" Width="56" Height="35" Grid.RowSpan="2"/>
-        <RadioButton Foreground="{Binding AppOption.UI_ForeGroundHex}" GroupName="G1" x:Name="unuseradio" Content="使わない" Grid.Column="1" HorizontalAlignment="Left" Margin="6.333,51,0,0" VerticalAlignment="Top" Checked="unuseClick"/>
+                 Foreground="{Binding AppContext.SelectedPerson.font.BrushColor}"
+                 FontFamily="{Binding AppContext.SelectedPerson.font.Family}"
+                 FontSize="{Binding AppContext.SelectedPerson.font.Size}"/>
+
+
+        <Button x:Name="AddpersonOK" Grid.Row="3" Grid.Column="0"
+                IsDefault="True" Content="確認" Click="clickOKbutton" 
+                HorizontalAlignment="Right" VerticalAlignment="Center" Width="120"/>
+        <Button x:Name="AddpersonCancel" Grid.Row="3" Grid.Column="1"
+                IsCancel="True" Content="キャンセル" Click="clickCancelbutton" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" Width="120"/>
+
 
 
     </Grid>

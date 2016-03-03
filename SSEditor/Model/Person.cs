@@ -42,6 +42,13 @@ namespace SSEditor
             font = new FontInfo();
             _hotkey = new HotkeyInfo(true, modifier, key);
         }
+        public Person(Person p)
+        {
+            _id = p.id;
+            _name = p.name;
+            font = p.font;
+            _hotkey = p.hotkey;
+        }
         #endregion
 
         private int _id;
@@ -74,7 +81,6 @@ namespace SSEditor
         /// </summary>
         private SerializableFontInfo _font_serializable;
 
-
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -92,6 +98,7 @@ namespace SSEditor
             set
             {
                 _font_serializable = new SerializableFontInfo(value);
+                OnPropertyChanged("font");
             }
         }
     }
@@ -125,6 +132,7 @@ namespace SSEditor
             }
             private set { }
         }
+
 
     }
 
