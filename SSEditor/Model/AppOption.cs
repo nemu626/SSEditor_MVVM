@@ -24,11 +24,7 @@ namespace SSEditor.Model
         public int Window_Heigth { get; set; }
 
         public string Default_Dirpath { get; set; }
-
         
-
-
-
         public AppOption()
         {
             PlainEditor_Font_Size = 16;

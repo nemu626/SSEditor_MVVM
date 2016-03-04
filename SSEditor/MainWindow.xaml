@@ -19,12 +19,23 @@
 
     <Window.Style>
         <Style TargetType="{x:Type Window}">
-            <Setter Property="Background" Value="Black"></Setter>
-            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Background" Value="{Binding AppTheme.UI_BackGroundHex}"></Setter>
+            <Setter Property="Foreground" Value="{Binding AppTheme.UI_ForeGroundHex}"></Setter>
         </Style>
+        
     </Window.Style>
 
-    <DockPanel Margin="0,0,0.334,-0.333">
+    <Window.Resources>
+        <Style x:Key="ButtonTheme" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{Binding AppTheme.Button_BackGroundHex}"></Setter>
+            <Setter Property="Foreground" Value="{Binding AppTheme.Button_ForeGroundHex}"></Setter>
+        </Style>
+        <Style x:Key="ComboBoxTheme" TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="{Binding AppTheme.Contols_BackGroundHex}"></Setter>
+            <Setter Property="Foreground" Value="{Binding AppTheme.Contols_ForeGroundHex}"></Setter>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="ファイル(_F)">
                 <MenuItem x:Name="NewMenu" Header="新規(N)" ToolTip="新しいファイルを作成します。" InputGestureText="CTRL+N" Click="MenuHandler_Click"></MenuItem>
@@ -43,8 +54,45 @@
                 <MenuItem x:Name="SetDisplaySpeaker" Header="プレーンエディタに登場人物名を表記する" IsCheckable="True" IsChecked="{Binding Project.displaySpeakerFlag}"></MenuItem>
             </MenuItem>
         </Menu>
-        <TabControl DockPanel.Dock="Top" Height="25" ItemsSource="{Binding TabNames}" SelectedIndex="{Binding CurrentTabIdx}">
-
+        <TabControl DockPanel.Dock="Top" Height="35" ItemsSource="{Binding TabNames}" 
+                    SelectedIndex="{Binding CurrentTabIdx}" BorderBrush="{Binding AppTheme.UI_BorderHex}" BorderThickness="0,0,0,2">
+            <TabControl.ItemContainerStyle>
+            <Style TargetType="{x:Type TabItem}">
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}">
+                                    <Grid>
+                                        <TextBlock
+                                        Height="34"
+                                        VerticalAlignment="Stretch" Padding="15,15,15,0"
+                                        Foreground="{Binding Path=DataContext.AppTheme.TabItem_ForeGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Background="{Binding Path=DataContext.AppTheme.TabItem_SelectedBackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Text="{Binding}"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <Grid>
+                                    <TextBlock
+                                        Height="34"
+                                        VerticalAlignment="Stretch" Padding="15,15,15,0"
+                                        Foreground="{Binding Path=DataContext.AppTheme.TabItem_ForeGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Background="{Binding Path=DataContext.AppTheme.TabItem_BackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Text="{Binding}"
+                                        ></TextBlock>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                </Style>
+            </TabControl.ItemContainerStyle>
         </TabControl>
 
 
@@ -60,7 +108,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="#3B4A51"  BorderThickness="3" Grid.Column="0" Grid.RowSpan="2" >
+            <Border BorderBrush="{Binding AppTheme.UI_BorderHex}"  BorderThickness="1" Grid.Column="0" Grid.RowSpan="2" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -71,12 +119,15 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="登場人物" FontSize="22" 
-                               Background="{Binding AppOption.UI_BackGroundHex}" Foreground="{Binding AppOption.UI_ForeGroundHex}" 
+                               Background="{Binding AppTheme.UI_BackGroundHex}" Foreground="{Binding AppTheme.UI_ForeGroundHex}" 
                                Grid.Row="0" FontWeight="Bold" TextAlignment="Center" LineHeight="22" VerticalAlignment="Center">
                     </TextBlock>
-                    <Button Name="newPerson" Content="登場人物を追加"  Click="AddPersoNclicked"  Grid.Row="1"></Button>
-                    <Button Name="ModifyPerson" Content="人物情報を修正" Grid.Row="2" Click="ModifyPersonclicked"></Button>
+                    <Button Name="newPerson" Content="登場人物を追加"  Grid.Row="1" Click="AddPersoNclicked"
+                            Style="{StaticResource ButtonTheme}"></Button>
+                    <Button Name="ModifyPerson" Content="人物情報を修正" Grid.Row="2" Click="ModifyPersonclicked"
+                            Style="{StaticResource ButtonTheme}"></Button>
                     <Button Name="deletePerson" Content="選択した人物を削除" Grid.Row="3"
+                            Style="{StaticResource ButtonTheme}"
                             Command="{Binding DeletePersonCom}">
                         <i:Interaction.Behaviors>
                             <behaviors:MessageOKCancelBehavior Message="この人物と発言が全て削除されます。\r\n よろしいですか？">
@@ -85,7 +136,7 @@
                     </Button>
 
                     <ListBox Name="treeView" ItemsSource="{Binding Project.people}" 
-                               Background="{Binding AppOption.PlainEditor_Font_BackGroundHex}" Grid.Row="4"
+                               Background="{Binding AppTheme.PlainEditor_BackGroundHex}" Grid.Row="4"
                               SelectedItem="{Binding AppContext.SelectedPerson}">
                         <ListBox.ItemTemplate>
                             <DataTemplate  DataType="local:Person">
@@ -108,14 +159,14 @@
                 <i:Interaction.Behaviors>
                     <behaviors:AutoScrollBehavior />
                 </i:Interaction.Behaviors>
-                <ListBox Background="{Binding AppOption.BlocksEditor_BackGroundHex}"   
+                <ListBox Background="{Binding AppTheme.BlocksEditor_BackGroundHex}"   
                          Name="TextLineBlocks" ItemsSource="{Binding Project.lines}"  VerticalAlignment="Top"
                          SelectedItem="{Binding AppContext.SelectedLine, Mode=Twoway}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ContextMenu>
                         <ContextMenu >
                             <MenuItem Header="この行を修正" Command="{Binding SetModifyModeCom}"></MenuItem>
-                            <MenuItem Header="この行を削除" Command="{Binding DeleteLineCom}">
+                            <MenuItem Header="この行を削除" Command="{Binding DelRelay}">
                             </MenuItem>
                             <MenuItem Header="この行の後ろに行を追加(割り込み)" Command="{Binding SetInterpolateModeCom}"></MenuItem>
                         </ContextMenu>
@@ -165,15 +216,15 @@
                 </ListBox>
             </ScrollViewer>
 
-            <ScrollViewer  BorderBrush="#3B4A51"  BorderThickness="3" Grid.Column="2">
+            <ScrollViewer  BorderBrush="{Binding AppTheme.UI_BorderHex}"  BorderThickness="3" Grid.Column="2">
                 <i:Interaction.Behaviors>
                     <behaviors:AutoScrollBehavior />
                 </i:Interaction.Behaviors>
                 
-                <TextBox x:Name="txtDocument" Grid.Row="0"
+                <TextBox x:Name="txtDocument" Grid.Row="0" HorizontalAlignment="Stretch" IsReadOnly="True"
                          Text="{Binding Project.text}" TextWrapping="Wrap" AcceptsReturn="True" 
-                         Background="{Binding AppOption.PlainEditor_Font_BackGroundHex}"
-                         Foreground="{Binding AppOption.PlainEditor_Font_ForeGroundHex}"
+                         Background="{Binding AppTheme.PlainEditor_BackGroundHex}"
+                         Foreground="{Binding AppTheme.PlainEditor_ForeGroundHex}"
                          FontSize="{Binding AppOption.PlainEditor_Font_Size}"
                          FontFamily="{Binding AppOption.PlainEditor_FontFamily}">
                     </TextBox>
@@ -189,12 +240,14 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="PersonListComboBox" ItemsSource="{Binding Project.people, Mode=TwoWay}" 
+                <ComboBox x:Name="PersonListComboBox" 
+                          ItemsSource="{Binding Project.people, Mode=TwoWay}" 
                           SelectedValue="{Binding AppContext.SelectedPerson, Mode=TwoWay}" DisplayMemberPath="name" 
-                          Grid.Row="0" Grid.Column="0" />
-                <ComboBox x:Name="ParenListComboBox" ItemsSource="{Binding Project.parens, Mode=TwoWay}" 
+                          Grid.Row="0" Grid.Column="0"/>
+                <ComboBox x:Name="ParenListComboBox" 
+                          ItemsSource="{Binding Project.parens, Mode=TwoWay}" 
                           SelectedValue="{Binding AppContext.SelectedParen, Mode=TwoWay}" DisplayMemberPath="startend" 
-                          Grid.Row="0" Grid.Column="1" />
+                          Grid.Row="0" Grid.Column="1"/>
                 
 
                 <ComboBox SelectedIndex="{Binding AppContext.EditorMode, Mode=TwoWay}" Grid.Row="0" Grid.Column="2">

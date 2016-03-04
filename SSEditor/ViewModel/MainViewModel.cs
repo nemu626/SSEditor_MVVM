@@ -17,7 +17,7 @@ namespace SSEditor.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        
+
         public ObservableCollection<TabContext> tabs { get; set; }
 
         private int currentTabIdx;
@@ -25,7 +25,7 @@ namespace SSEditor.ViewModel
             get { return currentTabIdx; }
             set
             {
-                if(value < tabs.Count)
+                if (value < tabs.Count)
                 {
                     currentTabIdx = value;
                     RaisePropertyChanged("CurrentTabIdx");
@@ -34,7 +34,7 @@ namespace SSEditor.ViewModel
                     RaisePropertyChanged("AppContext");
                 }
             }
-            }
+        }
 
         public List<string> TabNames
         {
@@ -57,7 +57,7 @@ namespace SSEditor.ViewModel
             }
         }
 
-//        private Project project;
+        //        private Project project;
         public Project Project
         {
             get { return Tab.Project; }
@@ -68,7 +68,7 @@ namespace SSEditor.ViewModel
             //}
         }
 
-//        private AppContext appContext;
+        //        private AppContext appContext;
         public AppContext AppContext
         {
             get { return Tab.Context; }
@@ -90,6 +90,17 @@ namespace SSEditor.ViewModel
             }
         }
 
+        private Theme appTheme;
+        public Theme AppTheme
+        {
+            get { return appTheme; }
+            set
+            {
+                appTheme = value;
+                RaisePropertyChanged("AppTheme");
+            }
+        }
+
 
 
 
@@ -102,7 +113,9 @@ namespace SSEditor.ViewModel
             currentTabIdx = 0;
 
             AppOption = new AppOption();
+            AppTheme = new Theme();
             AppContext.SelectedParen = Parentheses.BASE_KAGI;
+
 
             #region Line管理コマンド
             TypeLineCom = new RelayCommand(AddModifyLine,
@@ -129,9 +142,9 @@ namespace SSEditor.ViewModel
                     AppContext.SelectedPerson = AppContext.SelectedLine.speaker;
                     AppContext.SelectedParen = AppContext.SelectedLine.paren;
                 },
-                () => AppContext.SelectedLine != null && 
-                (       (AppContext.EditorMode == (int)EditMode.modify ) 
-                        ||(AppContext.EditorMode == (int)EditMode.insert && AppContext.InputText == "")) );
+                () => AppContext.SelectedLine != null &&
+                ((AppContext.EditorMode == (int)EditMode.modify)
+                        || (AppContext.EditorMode == (int)EditMode.insert && AppContext.InputText == "")));
 
             SetInterpolateModeCom = new RelayCommand(
                 () => { AppContext.EditorMode = (int)EditMode.interpolate; },
@@ -172,6 +185,21 @@ namespace SSEditor.ViewModel
                 );
             #endregion
 
+
+            DelRelay = new RelayCommand(
+                () => { Tab.CmdManager.Execute(new DeleteLineCommand(Tab)); },
+                () => { return Tab.DelCom.CanExecute(); }
+                );
+            UndoRelay = new RelayCommand(
+                () => { Tab.CmdManager.Undo(); },
+                () => { return Tab.CmdManager.CanUndo(); }
+                );
+            RedoRelay = new RelayCommand(
+                () => { Tab.CmdManager.Redo(); },
+                () => { return Tab.CmdManager.CanRedo(); }
+                );
+
+
             #region
             ////if (IsInDesignMode)
             ////{
@@ -184,6 +212,7 @@ namespace SSEditor.ViewModel
             #endregion
         }
 
+        #region コマンド
         #region Paren管理画面コマンド
         public RelayCommand AddParenCom { get; private set; }
 
@@ -203,7 +232,7 @@ namespace SSEditor.ViewModel
             else if (AppContext.EditorMode == (int)EditMode.modify)
             {
                 if (AppContext.SelectedLine != null &&
-                    AppContext.SelectedLine.Modify(AppContext.InputText, AppContext.SelectedPerson))
+                    Project.ModifyLine(AppContext.SelectedLine, AppContext.InputText, AppContext.SelectedPerson))
                     RaisePropertyChanged("line");
             }
             else// AppContext.EditorMode == EditorMode.interpolate
@@ -213,14 +242,16 @@ namespace SSEditor.ViewModel
         }
         public RelayCommand TypeLineCom { get; private set; }
         public RelayCommand TypeDescriptCom { get; private set; }
-        public RelayCommand DeleteLineCom { get; private set; } 
+        public RelayCommand DeleteLineCom { get; private set; }
         #endregion
 
         #region Mode管理コマンド
         public RelayCommand SetModifyModeCom { get; private set; }
         public RelayCommand SetInterpolateModeCom { get; private set; }
 
-
+        public RelayCommand DelRelay { get; private set; }
+        public RelayCommand UndoRelay { get; private set; }
+        public RelayCommand RedoRelay { get; private set; }
         #endregion
 
         #region Person管理
@@ -240,11 +271,13 @@ namespace SSEditor.ViewModel
             }
         }
         #endregion
+        #endregion
+
+
 
         /// <summary>
         /// Tabを新しく追加
         /// </summary>
-        /// <param name="tab"></param>
         /// <returns></returns>
         public bool AddTab(TabContext tab)
         {
@@ -269,7 +302,7 @@ namespace SSEditor.ViewModel
             }
             return false;
         }
-        
+
 
     }
 }

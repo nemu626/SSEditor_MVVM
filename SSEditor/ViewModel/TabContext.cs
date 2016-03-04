@@ -36,6 +36,8 @@ namespace SSEditor.ViewModel
         public Project Project { get { return project.Value; } private set { } }
         public AppContext Context { get { return context.Value; } private set { } }
 
+        public CommandManager CmdManager { get; set; }
+
         #region コンストラクタ
         public TabContext()
         {
@@ -43,6 +45,10 @@ namespace SSEditor.ViewModel
             contextMemento = new LinkedList<AppContext>();
             project = projectMemento.AddLast(new Project());
             context = contextMemento.AddLast(new AppContext());
+
+            CmdManager = new CommandManager();
+
+            DelCom = new DeleteLineCommand(this);
         }
         public TabContext(Project p, AppContext c)
         {
@@ -50,6 +56,10 @@ namespace SSEditor.ViewModel
             contextMemento = new LinkedList<AppContext>();
             project = projectMemento.AddLast(p);
             context = contextMemento.AddLast(c);
+
+            CmdManager = new CommandManager();
+
+            DelCom = new DeleteLineCommand(this);
         }
         #endregion
 
@@ -70,8 +80,8 @@ namespace SSEditor.ViewModel
         {
             while(project.Next != null)
                 projectMemento.Remove(project.Next);
-            project = projectMemento.AddLast(p);
-            context = contextMemento.AddLast(c);
+            project = projectMemento.AddLast(p.CloneDeep());
+            context = contextMemento.AddLast(c.CloneDeep());
 
             while (projectMemento.Count > MaxMemoryNumber)
                 projectMemento.RemoveFirst();
@@ -118,6 +128,11 @@ namespace SSEditor.ViewModel
             }
         }
         #endregion
+
+        public DeleteLineCommand DelCom
+        {
+            get; private set;
+        }
 
     }
 

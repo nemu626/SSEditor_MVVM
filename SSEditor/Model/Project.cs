@@ -129,12 +129,25 @@ namespace SSEditor
                 //末尾にAdd
                 else
                     lines.Add(l);
-                text = text + l.Line2String();
+                OnPropertyChanged("text");
             }
         }
         public bool RemoveLine(Line l)
         {
-            return lines.Remove(l);
+            if (lines.Remove(l))
+            {
+                OnPropertyChanged("text");
+                return true;
+            }return false;
+        }
+        public bool ModifyLine(Line l,string newline,Person newperon = null)
+        {
+            if (lines.Contains(l) && l.Modify(newline, newperon))
+            {
+                OnPropertyChanged("text");
+                return true;
+            }
+            return false;
         }
 
         public bool CheckSameHotKey(HotkeyInfo key)

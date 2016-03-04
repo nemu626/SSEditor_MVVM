@@ -108,11 +108,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\DeepCopyHelper.cs" />
+    <Compile Include="Model\Theme.cs" />
+    <Compile Include="ViewModel\Commands\CommandManager.cs" />
     <Compile Include="ViewModel\TabContext.cs" />
     <Compile Include="ViewModel\AppContext.cs" />
     <Compile Include="Model\AppOption.cs" />
     <Compile Include="Model\SSTFile.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\Commands\DeleteLineCommand.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Behavior\InputTextBoxBehavior.cs" />
     <Compile Include="View\Behavior\MessageBehaviors.cs" />

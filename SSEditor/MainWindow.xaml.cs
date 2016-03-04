@@ -212,8 +212,12 @@ namespace SSEditor
             {
                 InputBindings.Add(new KeyBinding(vm.TypeLineCom, Key.Enter, ModifierKeys.Alt));
                 InputBindings.Add(new KeyBinding(vm.TypeDescriptCom, Key.Enter, ModifierKeys.Control));
+                InputBindings.Add(new KeyBinding(vm.UndoRelay, Key.Z, ModifierKeys.Control));
+                InputBindings.Add(new KeyBinding(vm.RedoRelay, Key.Y, ModifierKeys.Control));
+
+
             }
-            
+
             //CusTom HotKey : "Mod + Key = Select Person & Focus to InputTextBox"
             if (vm != null && vm.Project != null)
                 foreach (Person p in vm.Project.people)
