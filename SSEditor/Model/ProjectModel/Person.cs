@@ -15,9 +15,9 @@ namespace SSEditor
     [Serializable]
     public class Person : INotifyPropertyChanged
     {
-        public const int ID_DES = -2;
+        public const int ID_DESCRIPT = -2;
         public const int ID_UNDEFINED = -1;
-        public static readonly Person DESCRIPT = new Person(ID_DES, "");
+        public static readonly Person DESCRIPT = new Person(ID_DESCRIPT, "[地の文]");
         #region コンストラクタ
         public Person()
         {

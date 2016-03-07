@@ -140,9 +140,9 @@ namespace SSEditor
                 return true;
             }return false;
         }
-        public bool ModifyLine(Line l,string newline,Person newperon = null)
+        public bool ModifyLine(Line l,string newline,Person newperson = null,Parentheses newparen = null)
         {
-            if (lines.Contains(l) && l.Modify(newline, newperon))
+            if (lines.Contains(l) && l.Modify(newline, newperson,newparen))
             {
                 OnPropertyChanged("text");
                 return true;

@@ -17,12 +17,13 @@
         Height="{Binding AppOption.Window_Heigth}" Width="{Binding AppOption.Window_Width}"
         Name="mainWindow">
 
+
     <Window.Style>
         <Style TargetType="{x:Type Window}">
             <Setter Property="Background" Value="{Binding AppTheme.UI_BackGroundHex}"></Setter>
             <Setter Property="Foreground" Value="{Binding AppTheme.UI_ForeGroundHex}"></Setter>
         </Style>
-        
+
     </Window.Style>
 
     <Window.Resources>
@@ -34,6 +35,7 @@
             <Setter Property="Background" Value="{Binding AppTheme.Contols_BackGroundHex}"></Setter>
             <Setter Property="Foreground" Value="{Binding AppTheme.Contols_ForeGroundHex}"></Setter>
         </Style>
+
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -54,53 +56,89 @@
                 <MenuItem x:Name="SetDisplaySpeaker" Header="プレーンエディタに登場人物名を表記する" IsCheckable="True" IsChecked="{Binding Project.displaySpeakerFlag}"></MenuItem>
             </MenuItem>
         </Menu>
-        <TabControl DockPanel.Dock="Top" Height="35" ItemsSource="{Binding TabNames}" 
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="35">
+            <ToolBar DockPanel.Dock="Top" Height="35" AllowDrop="False" >
+                <Button Command="{Binding UndoRelay}">
+                    <Rectangle Width="25" Height="25" Margin="2">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_undo_point}"></VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Button>
+                <Button Command="{Binding RedoRelay}">
+                    <Rectangle Width="25" Height="25" Margin="2">
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_redo_point}"></VisualBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Button>
+            </ToolBar>
+
+
+            <TabControl  Height="35" ItemsSource="{Binding TabNames}" 
                     SelectedIndex="{Binding CurrentTabIdx}" BorderBrush="{Binding AppTheme.UI_BorderHex}" BorderThickness="0,0,0,2">
-            <TabControl.ItemContainerStyle>
-            <Style TargetType="{x:Type TabItem}">
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type TabItem}">
+                                            <DockPanel
+                                                Background="{Binding Path=DataContext.AppTheme.TabItem_SelectedBackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                                                <TextBlock
+                                        Height="34" DockPanel.Dock="Left"
+                                        VerticalAlignment="Stretch" Padding="15,15,15,0"
+                                        Foreground="{Binding Path=DataContext.AppTheme.TabItem_ForeGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Background="{Binding Path=DataContext.AppTheme.TabItem_SelectedBackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                        Text="{Binding}"/>
+                                                <Button Height="25" Width="25" DockPanel.Dock="Right" BorderThickness="0"
+                                                        Command="{Binding Path= DataContext.DeleteTabCommand,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                                        Background="{Binding Path=DataContext.AppTheme.TabItem_SelectedBackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                                                    <Rectangle Width="15" Height="15" Fill = "White">
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_close}"></VisualBrush>
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                </Button>
+                                            </DockPanel>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type TabItem}">
                                     <Grid>
                                         <TextBlock
-                                        Height="34"
-                                        VerticalAlignment="Stretch" Padding="15,15,15,0"
-                                        Foreground="{Binding Path=DataContext.AppTheme.TabItem_ForeGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                                        Background="{Binding Path=DataContext.AppTheme.TabItem_SelectedBackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                                        Text="{Binding}"/>
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type TabItem}">
-                            <Grid>
-                                    <TextBlock
-                                        Height="34"
+                                        Height="34" Margin ="0,0,25,0"
                                         VerticalAlignment="Stretch" Padding="15,15,15,0"
                                         Foreground="{Binding Path=DataContext.AppTheme.TabItem_ForeGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         Background="{Binding Path=DataContext.AppTheme.TabItem_BackGroundHex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                         Text="{Binding}"
                                         ></TextBlock>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                </Style>
-            </TabControl.ItemContainerStyle>
-        </TabControl>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+            </TabControl>
+
+        </StackPanel>
+
+
+
+
+
 
 
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -108,7 +146,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="{Binding AppTheme.UI_BorderHex}"  BorderThickness="1" Grid.Column="0" Grid.RowSpan="2" >
+            <Border BorderBrush="{Binding AppTheme.UI_BorderHex}"  BorderThickness="1" Grid.Column="0" Grid.RowSpan="2" Margin="0,0,0.333,-0.333" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
@@ -141,11 +179,12 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate  DataType="local:Person">
                                 <DockPanel MouseLeftButtonUp="MouseButtonFocus2InputTextBox">
-                                <TextBlock Text="{Binding name, Mode=TwoWay}" DockPanel.Dock="Left"  
+                                    <TextBlock Text="{Binding name, Mode=OneWay}" DockPanel.Dock="Left"  
                                            Foreground="{Binding font.Color.Brush}"
                                            FontSize="12">
-                                </TextBlock>
-                                <TextBlock Text="{Binding hotkey.Key2String}" DockPanel.Dock="Right"
+
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding hotkey.Key2String}" DockPanel.Dock="Right"
                                            Foreground="{Binding font.Color.Brush}"
                                            FontSize="8"/>
                                 </DockPanel>
@@ -155,7 +194,7 @@
                 </Grid>
             </Border>
 
-            <ScrollViewer Name="HukidashiScroll" Grid.Column="1">
+            <ScrollViewer Name="HukidashiScroll" Grid.Column="1" Background="{Binding AppTheme.BlocksEditor_BackGroundHex}">
                 <i:Interaction.Behaviors>
                     <behaviors:AutoScrollBehavior />
                 </i:Interaction.Behaviors>
@@ -166,7 +205,7 @@
                     <ListBox.ContextMenu>
                         <ContextMenu >
                             <MenuItem Header="この行を修正" Command="{Binding SetModifyModeCom}"></MenuItem>
-                            <MenuItem Header="この行を削除" Command="{Binding DelRelay}">
+                            <MenuItem Header="この行を削除" Command="{Binding DeleteLineRelay}">
                             </MenuItem>
                             <MenuItem Header="この行の後ろに行を追加(割り込み)" Command="{Binding SetInterpolateModeCom}"></MenuItem>
                         </ContextMenu>
@@ -186,8 +225,9 @@
                                         <ColumnDefinition Width="80"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Foreground="White" Text="{Binding speaker.name}" 
-                                           VerticalAlignment="Bottom" TextWrapping="Wrap" ></TextBlock>
+                                    <TextBlock Grid.Column="0" Text="{Binding speaker.name}" 
+                                           VerticalAlignment="Bottom" TextWrapping="Wrap" 
+                                               Foreground="White"></TextBlock>
                                     <Border Name="BlockEditor_HukidasiBorder" Grid.Column="1" 
                                         DockPanel.Dock="Right" BorderBrush="{Binding speaker.font.BrushColor}">
                                         <Border.Style>
@@ -220,17 +260,17 @@
                 <i:Interaction.Behaviors>
                     <behaviors:AutoScrollBehavior />
                 </i:Interaction.Behaviors>
-                
+
                 <TextBox x:Name="txtDocument" Grid.Row="0" HorizontalAlignment="Stretch" IsReadOnly="True"
                          Text="{Binding Project.text}" TextWrapping="Wrap" AcceptsReturn="True" 
                          Background="{Binding AppTheme.PlainEditor_BackGroundHex}"
                          Foreground="{Binding AppTheme.PlainEditor_ForeGroundHex}"
                          FontSize="{Binding AppOption.PlainEditor_Font_Size}"
                          FontFamily="{Binding AppOption.PlainEditor_FontFamily}">
-                    </TextBox>
+                </TextBox>
             </ScrollViewer>
-            
-            <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+
+            <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"  Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="4*"/>
@@ -248,7 +288,7 @@
                           ItemsSource="{Binding Project.parens, Mode=TwoWay}" 
                           SelectedValue="{Binding AppContext.SelectedParen, Mode=TwoWay}" DisplayMemberPath="startend" 
                           Grid.Row="0" Grid.Column="1"/>
-                
+
 
                 <ComboBox SelectedIndex="{Binding AppContext.EditorMode, Mode=TwoWay}" Grid.Row="0" Grid.Column="2">
                     <ComboBoxItem Content="挿入" Selector.IsSelected="True"></ComboBoxItem>
@@ -260,7 +300,7 @@
                          Text="{Binding AppContext.InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          x:Name="InputTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
 
-                <Button x:Name="button" Content="完了"  Command="{Binding TypeLineCom}" 
+                <Button x:Name="button" Content="完了"  Command="{Binding SubmitLineRelay}" 
                         Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Height="Auto" 
                         />
             </Grid>

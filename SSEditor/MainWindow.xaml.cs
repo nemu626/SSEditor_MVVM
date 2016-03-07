@@ -34,7 +34,7 @@ namespace SSEditor
     /// </summary>
     public partial class MainWindow
     {
-        ViewModel.MainViewModel vm = null;
+        ViewModel.MainViewModel vm;
         
         public MainWindow()
         {
@@ -70,16 +70,17 @@ namespace SSEditor
         #region MenuBar 関連操作メソッド
         private void New()
         {
-            vm.AddTab(new ViewModel.TabContext());
+            vm.AddTab(new ViewModel.TabViewModel());
             vm.CurrentTabIdx++;
             UpdateHotkeys();
         }
         private void Open()
         {
-            var dlg = SSTFile.DlgFilterSST(new OpenFileDialog(), vm.AppContext.FileName);
+            var dlg = FileManager.DlgFilterSST(new OpenFileDialog(), vm.AppContext.FileName);
 
             if (dlg.ShowDialog() == true &&
-                (vm.AddTab(new ViewModel.TabContext(SSTFile.Open(dlg.FileName), new ViewModel.AppContext()))))
+                (vm.AddTab(new ViewModel.TabViewModel(
+                    new ViewModel.TabContext(FileManager.DeserializeProject(dlg.FileName), new ViewModel.AppContext())))))
             {
                 vm.CurrentTabIdx = vm.CurrentTabIdx + 1;
                 vm.AppContext.FilePath = dlg.FileName;
@@ -94,40 +95,26 @@ namespace SSEditor
             if (String.IsNullOrEmpty(vm.AppContext.FilePath))
                 SaveAs();
             else
-                SSTFile.Save(vm.Project, vm.AppContext.FilePath);
+                FileManager.SerializeProject(vm.Project, vm.AppContext.FilePath);
         }
         private void SaveAs()
         {
-            var dlg = SSTFile.DlgFilterSST(new SaveFileDialog(), vm.AppContext.FileName);
+            var dlg = FileManager.DlgFilterSST(new SaveFileDialog(), vm.AppContext.FileName);
             if (dlg.ShowDialog() == true)
-                SSTFile.Save(vm.Project, dlg.FileName);
+                FileManager.SerializeProject(vm.Project, dlg.FileName);
         }
         private void Export2Text()
         {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.FileName = vm.AppContext.FileName;
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "Text files(.txt)|*.txt";
-
+            var dlg = FileManager.DlgFilterTXT(new SaveFileDialog(), vm.AppContext.FileName);
             if (dlg.ShowDialog() == true)
-            {
-                using (StreamWriter sw = new StreamWriter(dlg.FileName,false))
-                {
-                    sw.Write(vm.Project.text);
-                    sw.Close();
-                }
-            }
+                FileManager.WriteFile(dlg.FileName, vm.Project.Lines2Text(vm.Project.displaySpeakerFlag));
         }
         private void ParenSetting()
         {
             var dlg = new View.ParenOption();
             dlg.ShowDialog();
         }
-        private void PersonSetting()
-        {
-            
-        }
-        
+
         private void MenuHandler_Click(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
@@ -159,9 +146,7 @@ namespace SSEditor
                 case "SetParenMenu":
                     ParenSetting();
                     break;
-                case "SetPersonMenu":
-                    PersonSetting();
-                    break;
+
             }
         }
         #endregion
@@ -196,7 +181,6 @@ namespace SSEditor
             vm.AppContext.SelectedPerson = p;
             Focus2InputTextBox();
         }
-
         
         /// <summary>
         /// 現在の全てのKeybindsをリセットし、Project.peopleから再Bind。
@@ -210,14 +194,11 @@ namespace SSEditor
             //                "CTRL+ ENTER = TypeLine DESCRIPT(地の文)
             if (vm != null)
             {
-                InputBindings.Add(new KeyBinding(vm.TypeLineCom, Key.Enter, ModifierKeys.Alt));
-                InputBindings.Add(new KeyBinding(vm.TypeDescriptCom, Key.Enter, ModifierKeys.Control));
+                InputBindings.Add(new KeyBinding(vm.SubmitLineRelay, Key.Enter, ModifierKeys.Alt));
+                InputBindings.Add(new KeyBinding(vm.AddDescriptionRelay, Key.Enter, ModifierKeys.Control));
                 InputBindings.Add(new KeyBinding(vm.UndoRelay, Key.Z, ModifierKeys.Control));
                 InputBindings.Add(new KeyBinding(vm.RedoRelay, Key.Y, ModifierKeys.Control));
-
-
             }
-
             //CusTom HotKey : "Mod + Key = Select Person & Focus to InputTextBox"
             if (vm != null && vm.Project != null)
                 foreach (Person p in vm.Project.people)
@@ -236,10 +217,5 @@ namespace SSEditor
                 this.InputTextBox.Focus();
         }
         #endregion
-
-        private void TextLineBlocks_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

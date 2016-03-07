@@ -38,7 +38,7 @@ namespace SSEditor.Model
             PlainEditor_ForeGroundHex = "#FFFFFF";
             PlainEditor_BackGroundHex = "#1e1e1e";
             BlocksEditor_ForeGroundHex = "#FFFFFF";
-            BlocksEditor_BackGroundHex = "#000000";
+            BlocksEditor_BackGroundHex = "#1e1e1e";
             UI_ForeGroundHex = "#FFFFFF";
             UI_BackGroundHex = "#2d2d30";
             UI_BorderHex = "#007acc";

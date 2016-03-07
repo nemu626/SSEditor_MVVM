@@ -44,6 +44,7 @@ namespace SSEditor.ViewModel
             }
         }
 
+
         //private bool modifyModeFlag;
         //public bool ModifyModeFlag
         //{

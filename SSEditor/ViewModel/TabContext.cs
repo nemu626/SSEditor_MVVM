@@ -38,6 +38,10 @@ namespace SSEditor.ViewModel
 
         public CommandManager CmdManager { get; set; }
 
+        public bool isSaved;
+        
+
+
         #region コンストラクタ
         public TabContext()
         {
@@ -45,10 +49,7 @@ namespace SSEditor.ViewModel
             contextMemento = new LinkedList<AppContext>();
             project = projectMemento.AddLast(new Project());
             context = contextMemento.AddLast(new AppContext());
-
-            CmdManager = new CommandManager();
-
-            DelCom = new DeleteLineCommand(this);
+            
         }
         public TabContext(Project p, AppContext c)
         {
@@ -56,10 +57,7 @@ namespace SSEditor.ViewModel
             contextMemento = new LinkedList<AppContext>();
             project = projectMemento.AddLast(p);
             context = contextMemento.AddLast(c);
-
-            CmdManager = new CommandManager();
-
-            DelCom = new DeleteLineCommand(this);
+            
         }
         #endregion
 
@@ -128,12 +126,8 @@ namespace SSEditor.ViewModel
             }
         }
         #endregion
-
-        public DeleteLineCommand DelCom
-        {
-            get; private set;
-        }
-
+        
+        
     }
 
 }

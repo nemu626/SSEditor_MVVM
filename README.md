@@ -26,6 +26,7 @@ https://opensource.org/licenses/mit-license.php
 
 + MVVM light Toolkit (https://mvvmlight.codeplex.com/license) Mit
 + Mahapps.Metro (https://github.com/MahApps/MahApps.Metro/blob/develop/LICENSE) MS-PL 
++ & MahApps.Metro.Resources
 
 + A WPF Font Picker (http://www.codeproject.com/Articles/368070/A-WPF-Font-Picker-with-Color) CPOL
   ( http://www.codeproject.com/info/cpol10.aspx)
@@ -35,6 +36,8 @@ Install : MVVM light toolkit, Mahapps.MetroをNugetからインストールし�
 	Install-Package MvvmLight
 	
 	Install-Package MahApps.Metro
+	
+	Install-Package MahApps.Metro.Resources
 
 
 

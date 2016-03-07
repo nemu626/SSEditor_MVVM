@@ -17,8 +17,7 @@ namespace SSEditor.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-
-        public ObservableCollection<TabContext> tabs { get; set; }
+        public ObservableCollection<TabViewModel> tabs { get; private set; }
 
         private int currentTabIdx;
         public int CurrentTabIdx {
@@ -29,9 +28,11 @@ namespace SSEditor.ViewModel
                 {
                     currentTabIdx = value;
                     RaisePropertyChanged("CurrentTabIdx");
-                    RaisePropertyChanged("Tab");
+                    RaisePropertyChanged("CurrentTab");
+                    RaisePropertyChanged("CurrentTabContext");
                     RaisePropertyChanged("Project");
                     RaisePropertyChanged("AppContext");
+                    RaisePropertyChanged("Manager");
                 }
             }
         }
@@ -41,44 +42,33 @@ namespace SSEditor.ViewModel
             get
             {
                 var s = new List<string>();
-                foreach (TabContext t in tabs)
-                    s.Add(t.Project.title);
+                foreach (TabViewModel t in tabs)
+                    s.Add(t.TabContext.Project.title);
                 return s;
             }
         }
 
-        public TabContext Tab
+        public TabViewModel CurrentTab
         {
-            get { return tabs[CurrentTabIdx]; }
-            private set
-            {
-                currentTabIdx = tabs.IndexOf(value);
-                RaisePropertyChanged("Tab");
-            }
+            get { return tabs[currentTabIdx]; }
         }
-
-        //        private Project project;
+        public TabContext CurrentTabContext
+        {
+            get { return CurrentTab.TabContext; }
+        }
+        public CommandManager Manager
+        {
+            get { return CurrentTab.Manager; }
+        }
+        
         public Project Project
         {
-            get { return Tab.Project; }
-            //private set
-            //{
-            //    project = value;
-            //    RaisePropertyChanged("Project");
-            //}
+            get { return CurrentTab.TabContext.Project; }
         }
-
-        //        private AppContext appContext;
         public AppContext AppContext
         {
-            get { return Tab.Context; }
-            //set
-            //{
-            //    appContext = value;
-            //    RaisePropertyChanged("AppContext");
-            //}
+            get { return CurrentTab.TabContext.Context; }
         }
-
         private AppOption appoption;
         public AppOption AppOption
         {
@@ -89,7 +79,6 @@ namespace SSEditor.ViewModel
                 RaisePropertyChanged("AppOption");
             }
         }
-
         private Theme appTheme;
         public Theme AppTheme
         {
@@ -101,37 +90,16 @@ namespace SSEditor.ViewModel
             }
         }
 
-
-
-
         public MainViewModel()
         {
-            //AppContext = new AppContext();
-            //Project = new Project();
-            tabs = new ObservableCollection<TabContext>();
-            tabs.Add(new TabContext());
+            tabs = new ObservableCollection<TabViewModel>();
+            tabs.Add(new TabViewModel());
             currentTabIdx = 0;
 
             AppOption = new AppOption();
             AppTheme = new Theme();
             AppContext.SelectedParen = Parentheses.BASE_KAGI;
 
-
-            #region Line管理コマンド
-            TypeLineCom = new RelayCommand(AddModifyLine,
-                () => (AppContext.SelectedPerson != null && AppContext.SelectedParen != null));
-            TypeDescriptCom = new RelayCommand(
-                () => {
-                    var person = AppContext.SelectedPerson;
-                    var paren = AppContext.SelectedParen;
-                    AppContext.SelectedPerson = Person.DESCRIPT;
-                    AppContext.SelectedParen = Parentheses.BASE_EMPTY;
-                    AddModifyLine();
-                    AppContext.SelectedPerson = person;
-                    AppContext.SelectedParen = paren;
-                },
-                () => !string.IsNullOrEmpty(AppContext.InputText));
-            #endregion
 
             #region Mode管理コマンド
             SetModifyModeCom = new RelayCommand(
@@ -151,17 +119,7 @@ namespace SSEditor.ViewModel
                 () => (AppContext != null && Project.lines.Contains(AppContext.SelectedLine))
                 );
             #endregion
-
-
-            DeleteLineCom = new RelayCommand(
-                () =>
-                {
-                    if (true) Project.RemoveLine(AppContext.SelectedLine);
-                    AppContext.SelectedLine = null;
-                },
-                () => (AppContext.SelectedLine != null && Project.lines.Contains(AppContext.SelectedLine))
-                );
-
+            
             #region Paren管理
             AddParenCom = new RelayCommand(
                 () => { Project.parens.Add(AppContext.SelectedParen);
@@ -185,33 +143,30 @@ namespace SSEditor.ViewModel
                 );
             #endregion
 
+            #region りれーこまんどだおー
 
-            DelRelay = new RelayCommand(
-                () => { Tab.CmdManager.Execute(new DeleteLineCommand(Tab)); },
-                () => { return Tab.DelCom.CanExecute(); }
-                );
             UndoRelay = new RelayCommand(
-                () => { Tab.CmdManager.Undo(); },
-                () => { return Tab.CmdManager.CanUndo(); }
-                );
+                () => { Manager.Undo();},
+                () => { return Manager.CanUndo(); });
             RedoRelay = new RelayCommand(
-                () => { Tab.CmdManager.Redo(); },
-                () => { return Tab.CmdManager.CanRedo(); }
+                () => { Manager.Redo(); },
+                () => { return Manager.CanRedo(); });
+            SubmitLineRelay = new RelayCommand(
+                () => { CurrentTab.SubmitLine(); },
+                () => { return CurrentTab.CanSubmitLine(); });
+            DeleteLineRelay = new RelayCommand(
+                () => { Manager.Execute(new DeleteLineCommand(CurrentTabContext)); },
+                () => { return CurrentTab.DeleteLine.CanExecute(); });
+            AddDescriptionRelay = new RelayCommand(
+                () => { Manager.Execute(new AddDescriptionLineCommand(CurrentTabContext)); },
+                () => { return CurrentTab.AddDescription.CanExecute(); }
                 );
-
-
-            #region
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            DeleteTabCommand = new RelayCommand(
+                () => { RemoveTab(CurrentTab); },
+                () => { return (tabs.Count >= 2); }
+                );
             #endregion
         }
-
         #region コマンド
         #region Paren管理画面コマンド
         public RelayCommand AddParenCom { get; private set; }
@@ -224,34 +179,13 @@ namespace SSEditor.ViewModel
         }
         #endregion
 
-        #region Line管理コマンド
-        private void AddModifyLine()
-        {
-            if (AppContext.EditorMode == (int)EditMode.insert)
-                Project.AddLine(new Line(AppContext.InputText, AppContext.SelectedPerson, AppContext.SelectedParen));
-            else if (AppContext.EditorMode == (int)EditMode.modify)
-            {
-                if (AppContext.SelectedLine != null &&
-                    Project.ModifyLine(AppContext.SelectedLine, AppContext.InputText, AppContext.SelectedPerson))
-                    RaisePropertyChanged("line");
-            }
-            else// AppContext.EditorMode == EditorMode.interpolate
-                Project.AddLine(new Line(AppContext.InputText, AppContext.SelectedPerson, AppContext.SelectedParen),
-                    AppContext.SelectedLine);
-            AppContext.InputText = "";
-        }
-        public RelayCommand TypeLineCom { get; private set; }
-        public RelayCommand TypeDescriptCom { get; private set; }
-        public RelayCommand DeleteLineCom { get; private set; }
-        #endregion
+
 
         #region Mode管理コマンド
         public RelayCommand SetModifyModeCom { get; private set; }
         public RelayCommand SetInterpolateModeCom { get; private set; }
 
-        public RelayCommand DelRelay { get; private set; }
-        public RelayCommand UndoRelay { get; private set; }
-        public RelayCommand RedoRelay { get; private set; }
+
         #endregion
 
         #region Person管理
@@ -273,13 +207,11 @@ namespace SSEditor.ViewModel
         #endregion
         #endregion
 
-
-
         /// <summary>
         /// Tabを新しく追加
         /// </summary>
         /// <returns></returns>
-        public bool AddTab(TabContext tab)
+        public bool AddTab(TabViewModel tab)
         {
             if (tab != null)
             {
@@ -289,20 +221,39 @@ namespace SSEditor.ViewModel
             }
             return false;
         }
-        public bool RemoveTab(TabContext tab)
+        public bool RemoveTab(TabViewModel tab)
         {
             
             if (tabs.Contains(tab) && tabs.Count > 0)
             {
-                if(currentTabIdx >= tabs.IndexOf(tab))
-                    currentTabIdx--;
-                tabs.Remove(Tab);
+                if(CurrentTabIdx >= tabs.IndexOf(tab) && CurrentTabIdx >= 1)
+                {
+                    tabs.Remove(tab);
+                    CurrentTabIdx--;
+                }
+                else
+                    tabs.Remove(tab);
                 RaisePropertyChanged("TabNames");
                 return true;
             }
             return false;
         }
 
+
+
+        #region 
+        ///リレーコマンド。処理をコマンドクラスにほぼ丸投げしてるのはRelay,
+        ///ここで処理を完結されているものはCommandと命名
+
+        public RelayCommand DeleteLineRelay { get; private set; }
+        public RelayCommand SubmitLineRelay { get; private set; }
+        public RelayCommand AddDescriptionRelay { get; private set; }
+
+        public RelayCommand RedoRelay { get; private set; }
+        public RelayCommand UndoRelay { get; private set; }
+        public RelayCommand DeleteTabCommand { get; private set; }
+
+        #endregion
 
     }
 }

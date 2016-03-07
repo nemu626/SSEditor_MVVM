@@ -63,22 +63,25 @@ namespace SSEditor
         }
         public string Line2String(bool speakerFlag = true)
         {
-            if( speaker != null && speaker.name != null && speakerFlag)
+            if (speaker != null && speaker.name != null && speakerFlag && speaker.id != Person.ID_DESCRIPT)
                 return speaker.name + paren.EncloseString(line) + Environment.NewLine;
+            else if (speaker.id == Person.ID_DESCRIPT)
+                return line + Environment.NewLine;
             else
                 return paren.EncloseString(line) + Environment.NewLine;
         }
 
-        public bool Modify(string modifiedLine,Person modifiedSpeaker = null)
+        public bool Modify(string modifiedLine,Person modifiedSpeaker = null,Parentheses modifiedParen = null)
         {
-            if (modifiedLine == line && modifiedSpeaker == speaker ||
-                modifiedSpeaker == null)
+            if (modifiedLine == line && modifiedSpeaker == speaker && paren == modifiedParen)
                 return false;
             else {
-                if(modifiedLine != line)
+                if(modifiedLine != null && modifiedLine != line)
                     line = modifiedLine;
-                if (modifiedSpeaker != speaker)
+                if (modifiedSpeaker != null && modifiedSpeaker != speaker)
                     speaker = modifiedSpeaker;
+                if (modifiedParen != null && modifiedParen != paren)
+                    paren = modifiedParen;
                 return true;
             }
 

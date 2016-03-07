@@ -25,12 +25,13 @@ namespace SSEditor.ViewModel
         const int UndoMax = 20;
         private LinkedList<UndoRedoIcommand> UndoStack;
         private LinkedList<UndoRedoIcommand> RedoStack;
-        
+        private int commandPoint;
         
         public CommandManager()
         {
             UndoStack = new LinkedList<UndoRedoIcommand>();
             RedoStack = new LinkedList<UndoRedoIcommand>();
+            commandPoint = 0;
         }
 
         public void Undo()
@@ -38,6 +39,7 @@ namespace SSEditor.ViewModel
             var cmd = UndoStack.Last();
             UndoStack.RemoveLast();
             cmd.Undo();
+            commandPoint--;
             RedoStack.AddLast(cmd);
         }
         public void Redo()
@@ -45,6 +47,7 @@ namespace SSEditor.ViewModel
             var cmd = RedoStack.Last();
             RedoStack.RemoveLast();
             cmd.Redo();
+            commandPoint++;
             UndoStack.AddLast(cmd);
         }
         public bool CanUndo()
@@ -62,7 +65,8 @@ namespace SSEditor.ViewModel
                 UndoStack.RemoveFirst();
             RedoStack.Clear();
 
-                cmd.Execute(param);
+            cmd.Execute(param);
+            commandPoint++;
         }
     }
 
