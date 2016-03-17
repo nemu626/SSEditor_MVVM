@@ -10,10 +10,19 @@ namespace SSEditor.ViewModel
     /// Mvvm lightのViewModelBaseを継承
     /// 
     ///プロパティ(変更をNotifyするProperty)
-    ///Project : 編集中のファイルに関するプロパティ
-    ///appOption : アプリの環境設定値に関するプロパティ（将来的にsettings.settingsで代替できるかと)
-    ///appContext : 現在のアプリのコンテキストに関するプロパティ(選択されたLine,Person等)
-
+    ///tabs : タブのコレクション。
+    ///CurrentTabIdx : 現在開かれているタブのIndex
+    ///TabNames : 各タブのファイル名リスト
+    ///
+    ///AppOption : アプリの環境設定値に関するプロパティ（将来的にsettings.settingsで代替できるかと)
+    ///AppTheme : アプリのカラーテーマ
+    ///
+    /// 以下、現在のタブのプロパティへのアクセッサ
+    /// CurrentTab
+    /// CurrentTabContext
+    /// Manager
+    /// Project
+    /// AppContext
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
@@ -47,28 +56,6 @@ namespace SSEditor.ViewModel
                 return s;
             }
         }
-
-        public TabViewModel CurrentTab
-        {
-            get { return tabs[currentTabIdx]; }
-        }
-        public TabContext CurrentTabContext
-        {
-            get { return CurrentTab.TabContext; }
-        }
-        public CommandManager Manager
-        {
-            get { return CurrentTab.Manager; }
-        }
-        
-        public Project Project
-        {
-            get { return CurrentTab.TabContext.Project; }
-        }
-        public AppContext AppContext
-        {
-            get { return CurrentTab.TabContext.Context; }
-        }
         private AppOption appoption;
         public AppOption AppOption
         {
@@ -88,6 +75,28 @@ namespace SSEditor.ViewModel
                 appTheme = value;
                 RaisePropertyChanged("AppTheme");
             }
+        }
+
+
+        public TabViewModel CurrentTab
+        {
+            get { return tabs[currentTabIdx]; }
+        }
+        public TabContext CurrentTabContext
+        {
+            get { return CurrentTab.TabContext; }
+        }
+        public CommandManager Manager
+        {
+            get { return CurrentTab.Manager; }
+        }
+        public Project Project
+        {
+            get { return CurrentTab.TabContext.Project; }
+        }
+        public AppContext AppContext
+        {
+            get { return CurrentTab.TabContext.Context; }
         }
 
         public MainViewModel()
@@ -143,7 +152,7 @@ namespace SSEditor.ViewModel
                 );
             #endregion
 
-            #region りれーこまんどだおー
+            #region りれーこまんど
 
             UndoRelay = new RelayCommand(
                 () => { Manager.Undo();},
@@ -167,45 +176,6 @@ namespace SSEditor.ViewModel
                 );
             #endregion
         }
-        #region コマンド
-        #region Paren管理画面コマンド
-        public RelayCommand AddParenCom { get; private set; }
-
-        public RelayCommand<bool> DeleteParenCom { get; private set; }
-        private void DeleteParen()
-        {
-            if (AppContext != null && Project.parens.Contains(AppContext.SelectedParen))
-                Project.parens.Remove(AppContext.SelectedParen);
-        }
-        #endregion
-
-
-
-        #region Mode管理コマンド
-        public RelayCommand SetModifyModeCom { get; private set; }
-        public RelayCommand SetInterpolateModeCom { get; private set; }
-
-
-        #endregion
-
-        #region Person管理
-        public RelayCommand AddPersonCom { get; private set; }
-        public RelayCommand<bool> DeletePersonCom { get; private set; }
- //       public RelayCommand ModifyPersonCom { get; private set; }
-        private void AddnewPerson()
-        {
-            Project.AddPerson(AppContext.SelectedPerson);
-            AppContext.SelectedPerson = null;
-        }
-        private void DeletePerson()
-        {
-            if (Project.people.Contains(AppContext.SelectedPerson))
-            {
-                Project.RemovePerson(AppContext.SelectedPerson);
-            }
-        }
-        #endregion
-        #endregion
 
         /// <summary>
         /// Tabを新しく追加
@@ -239,8 +209,6 @@ namespace SSEditor.ViewModel
             return false;
         }
 
-
-
         #region 
         ///リレーコマンド。処理をコマンドクラスにほぼ丸投げしてるのはRelay,
         ///ここで処理を完結されているものはCommandと命名
@@ -254,6 +222,44 @@ namespace SSEditor.ViewModel
         public RelayCommand DeleteTabCommand { get; private set; }
 
         #endregion
+        #region コマンド Commands Classes 実装により、削除予定
+        #region Paren管理画面コマンド
+        public RelayCommand AddParenCom { get; private set; }
 
+        public RelayCommand<bool> DeleteParenCom { get; private set; }
+        private void DeleteParen()
+        {
+            if (AppContext != null && Project.parens.Contains(AppContext.SelectedParen))
+                Project.parens.Remove(AppContext.SelectedParen);
+        }
+        #endregion
+
+
+
+        #region Mode管理コマンド
+        public RelayCommand SetModifyModeCom { get; private set; }
+        public RelayCommand SetInterpolateModeCom { get; private set; }
+
+
+        #endregion
+
+        #region Person管理
+        public RelayCommand AddPersonCom { get; private set; }
+        public RelayCommand<bool> DeletePersonCom { get; private set; }
+        //       public RelayCommand ModifyPersonCom { get; private set; }
+        private void AddnewPerson()
+        {
+            Project.AddPerson(AppContext.SelectedPerson);
+            AppContext.SelectedPerson = null;
+        }
+        private void DeletePerson()
+        {
+            if (Project.people.Contains(AppContext.SelectedPerson))
+            {
+                Project.RemovePerson(AppContext.SelectedPerson);
+            }
+        }
+        #endregion
+        #endregion
     }
 }

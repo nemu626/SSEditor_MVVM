@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Runtime.Serialization.Json;
 namespace SSEditor
 {
     public static class FileManager
@@ -76,6 +76,5 @@ namespace SSEditor
         {
             Serialize(project, filePath);
         }
-
     }
 }

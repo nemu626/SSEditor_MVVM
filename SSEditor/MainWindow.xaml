@@ -40,8 +40,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="ファイル(_F)">
-                <MenuItem x:Name="NewMenu" Header="新規(N)" ToolTip="新しいファイルを作成します。" InputGestureText="CTRL+N" Click="MenuHandler_Click"></MenuItem>
-                <MenuItem x:Name="OpenMenu" Header="開く(O)" ToolTip="Opens a new file" InputGestureText="CTRL+O" Click="MenuHandler_Click"></MenuItem>
+                <MenuItem x:Name="NewMenu" Header="新規(N)" ToolTip="新しいファイルを作成します。" InputGestureText="CTRL+N" Click="MenuHandler_Click"/>
+                <MenuItem x:Name="OpenMenu" Header="開く(O)" ToolTip="Opens a new file" InputGestureText="CTRL+O" Click="MenuHandler_Click"/>
                 <MenuItem x:Name="SaveMenu" Header="保存(S)" ToolTip="Saves the current file" InputGestureText="CTRL+S" Click="MenuHandler_Click"/>
                 <MenuItem x:Name="SaveAsMenu" Header="名前を付けて保存" ToolTip="Saves the current file" Click="MenuHandler_Click"/>
                 <MenuItem x:Name="ExportTextMenu" Header="テキストファイルにエクスポート" ToolTip="Export to Text file" Click="MenuHandler_Click"/>
@@ -50,6 +50,8 @@
             </MenuItem>
 
             <MenuItem Header="編集(_E)">
+                <MenuItem x:Name="Undo" Header="元に戻す" ToolTip="Undo..." InputGestureText="CTRL+Z" Command="{Binding UndoRelay}"/>
+                <MenuItem x:Name="Redo" Header="やり直し" ToolTip="Redo..." InputGestureText="CTRL+Y" Command="{Binding RedoRelay}"/>
             </MenuItem>
             <MenuItem Header="オプション(_O)">
                 <MenuItem x:Name="SetParenMenu" Header="括弧の設定" ToolTip="Option for Paren" Click="MenuHandler_Click"></MenuItem>
@@ -58,17 +60,17 @@
         </Menu>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="35">
             <ToolBar DockPanel.Dock="Top" Height="35" AllowDrop="False" >
-                <Button Command="{Binding UndoRelay}">
-                    <Rectangle Width="25" Height="25" Margin="2">
+                <Button Command="{Binding UndoRelay}" ToolTip="Undo">
+                    <Rectangle Width="30" Height="30" Margin="5,0,5,0">
                         <Rectangle.Fill>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_undo_point}"></VisualBrush>
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_undo_point}"></VisualBrush>
                         </Rectangle.Fill>
                     </Rectangle>
                 </Button>
-                <Button Command="{Binding RedoRelay}">
-                    <Rectangle Width="25" Height="25" Margin="2">
+                <Button Command="{Binding RedoRelay}" ToolTip="Redo">
+                    <Rectangle Width="30" Height="30" Margin="5,0,5,0">
                         <Rectangle.Fill>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_redo_point}"></VisualBrush>
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_redo_point}"></VisualBrush>
                         </Rectangle.Fill>
                     </Rectangle>
                 </Button>
@@ -125,21 +127,13 @@
                     </Style>
                 </TabControl.ItemContainerStyle>
             </TabControl>
-
         </StackPanel>
-
-
-
-
-
-
 
         <Grid DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
-
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="8*"/>
@@ -262,7 +256,7 @@
                 </i:Interaction.Behaviors>
 
                 <TextBox x:Name="txtDocument" Grid.Row="0" HorizontalAlignment="Stretch" IsReadOnly="True"
-                         Text="{Binding Project.text}" TextWrapping="Wrap" AcceptsReturn="True" 
+                         Text="{Binding Project.text, Mode=OneWay}" TextWrapping="Wrap" AcceptsReturn="True" 
                          Background="{Binding AppTheme.PlainEditor_BackGroundHex}"
                          Foreground="{Binding AppTheme.PlainEditor_ForeGroundHex}"
                          FontSize="{Binding AppOption.PlainEditor_Font_Size}"

@@ -45,7 +45,7 @@ namespace SSEditor
                     text = Lines2Text(displaySpeakerFlag);
                 return _text;
             }
-            set
+            private set
             {
                 _text = value;
                 OnPropertyChanged("text");

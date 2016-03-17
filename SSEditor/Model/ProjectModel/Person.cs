@@ -74,6 +74,7 @@ namespace SSEditor
                 _hotkey = value;
                 OnPropertyChanged("hotkey");
             } }
+
         
 
         /// <summary>

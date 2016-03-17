@@ -43,17 +43,18 @@ Install : MVVM light toolkit, Mahapps.MetroをNugetからインストールし�
 
 
 
-toDoList
+ToDoList
 
 + Animation機能
 + コメントを書く
-+ タブエディタ化
 + テーマ機能の実装
 + Text -> LinesへのParse機能(←正規表現)
 + プラグイン
-+ Undo,Redo機能（←Memento pattern勉強)
-+ プレーンエディタに登場人物非表示
-+ ~~人物情報修正~~
+
++ ~~Undo,Redo機能~~完了
++ ~~プレーンエディタに登場人物非表示~~完了
++ ~~タブエディタ化~~ 完了
++ ~~人物情報修正~~ 完了
 + ~~地の文を吹き出しではなく違う見た目に~~ 完了
 + ~~文章修正時に吹き出しの台詞自動更新。(LineクラスのInotify継承)~~ 完了
 + ~~Line Delete~~完了
