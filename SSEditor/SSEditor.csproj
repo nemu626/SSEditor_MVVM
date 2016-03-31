@@ -109,7 +109,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DeepCopyHelper.cs" />
-    <Compile Include="Model\ProjectModel\TextParser.cs" />
     <Compile Include="Model\Theme.cs" />
     <Compile Include="ViewModel\Commands\ParenCommands.cs" />
     <Compile Include="ViewModel\Commands\PersonCommands.cs" />
