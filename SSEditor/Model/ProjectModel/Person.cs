@@ -28,6 +28,14 @@ namespace SSEditor
 
             hotkey = new HotkeyInfo();
         }
+        public Person(string name)
+        {
+            _id = ID_UNDEFINED;
+            _name = name;
+            font = new FontInfo();
+            _hotkey = new HotkeyInfo();
+
+        }
         public Person(int id, string name)
         {
             _id = id;

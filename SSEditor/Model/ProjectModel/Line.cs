@@ -64,11 +64,11 @@ namespace SSEditor
         public string Line2String(bool speakerFlag = true)
         {
             if (speaker != null && speaker.name != null && speakerFlag && speaker.id != Person.ID_DESCRIPT)
-                return speaker.name + paren.EncloseString(line) + Environment.NewLine;
+                return speaker.name + paren.EncloseString(line);
             else if (speaker.id == Person.ID_DESCRIPT)
-                return line + Environment.NewLine;
+                return paren.EncloseString(line);
             else
-                return paren.EncloseString(line) + Environment.NewLine;
+                return paren.EncloseString(line);
         }
 
         public bool Modify(string modifiedLine,Person modifiedSpeaker = null,Parentheses modifiedParen = null)
@@ -99,11 +99,11 @@ namespace SSEditor
     [Serializable]
     public class Parentheses
     {
-        public static readonly Parentheses BASE_KAGI = new Parentheses("「", "」", "");
-        public static readonly Parentheses BASE_PAREN = new Parentheses("(", ")", "");
-        public static readonly Parentheses BASE_EMPTY = new Parentheses("", "", "");
-        public static readonly Parentheses BASE_QUO = new Parentheses("\"", "\"", "");
-        public static readonly Parentheses BASE_COLON = new Parentheses(" : ", "", "");
+        public static readonly Parentheses BASE_KAGI = new Parentheses("「", "」", System.Environment.NewLine);
+        public static readonly Parentheses BASE_PAREN = new Parentheses("(", ")", System.Environment.NewLine);
+        public static readonly Parentheses BASE_EMPTY = new Parentheses("", "", System.Environment.NewLine);
+        public static readonly Parentheses BASE_QUO = new Parentheses("\"", "\"", System.Environment.NewLine);
+        public static readonly Parentheses BASE_COLON = new Parentheses(" : ", "", System.Environment.NewLine);
 
         public string start { get; set; }
         public string end { get; set; }
