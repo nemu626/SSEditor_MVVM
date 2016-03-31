@@ -109,12 +109,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DeepCopyHelper.cs" />
-    <Compile Include="Model\TextParser.cs" />
+    <Compile Include="Model\ProjectModel\TextParser.cs" />
     <Compile Include="Model\Theme.cs" />
     <Compile Include="ViewModel\Commands\ParenCommands.cs" />
     <Compile Include="ViewModel\Commands\PersonCommands.cs" />
-    <Compile Include="ViewModel\Messages.cs" />
-    <Compile Include="ViewModel\ParenOptionViewModel.cs" />
     <Compile Include="ViewModel\TabViewModel.cs" />
     <Compile Include="ViewModel\Commands\CommandManager.cs" />
     <Compile Include="ViewModel\TabContext.cs" />
@@ -127,19 +125,12 @@
     <Compile Include="View\Behavior\InputTextBoxBehavior.cs" />
     <Compile Include="View\Behavior\MessageBehaviors.cs" />
     <Compile Include="View\Behavior\ScrollViewerBehavior.cs" />
-    <Compile Include="View\ImportTextWindow.xaml.cs">
-      <DependentUpon>ImportTextWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ParenOption.xaml.cs">
       <DependentUpon>ParenOption.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AddPersonDialog.xaml">
       <SubType>Designer</SubType>
@@ -182,10 +173,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ImportTextWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\ParenOption.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
