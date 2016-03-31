@@ -9,12 +9,11 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         mc:Ignorable="d"
         Title="括弧記号オプション" Height="300" Width="350"
-        DataContext="{Binding Main, Source={StaticResource Locator}}"
-        Foreground="{Binding AppOption.UI_ForeGroundHex}"
-        Background="{Binding AppOption.UI_BackGroundHex}"
+        DataContext="{Binding ParenOption, Source={StaticResource Locator}}"
+        Style="{DynamicResource WindowUITheme}"
         >
     <Window.Resources>
-        
+        <ResourceDictionary Source="Styles.xaml"></ResourceDictionary>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -28,22 +27,18 @@
         
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="登録した括弧記号一覧"
                    FontSize="22" HorizontalAlignment="Center"
-                   Margin="5"></TextBlock>
+                   Margin="5"
+                   Style ="{DynamicResource TextBlockTheme}"></TextBlock>
         <DockPanel Grid.Row="1" Grid.Column="0" Margin="5">
-            <Button Content="リストで選んだ記号を削除" Margin="20,5,20,10" DockPanel.Dock="Bottom"
-                    Command="{Binding DeleteParenCom}">
+            <Button Content="選んだ記号を削除" Margin="20,5,20,10" DockPanel.Dock="Bottom"
+                    Command="{Binding DeleteParenRelay}">
                 <i:Interaction.Behaviors>
                     <behavior:MessageOKCancelBehavior Message="削除してよろしいですか？"></behavior:MessageOKCancelBehavior>
                 </i:Interaction.Behaviors>
             </Button>
-            <CheckBox Content="修正モード"  HorizontalAlignment="Center" IsChecked="{Binding AppContext.ModifyParenModeFlag,Mode=TwoWay}"
-                      Foreground="{Binding AppOption.UI_ForeGroundHex}" DockPanel.Dock="Bottom"
-                      Margin="0,5,0,5">  </CheckBox>
 
-            <ListView ItemsSource="{Binding Project.parens}" DockPanel.Dock="Top" 
-                      SelectedItem="{Binding AppContext.SelectedParen, Mode=Twoway}"
-                      Focusable="{Binding AppContext.ModifyParenModeFlag, Mode=OneWay}"
-                      IsEnabled="{Binding AppContext.ModifyParenModeFlag}">
+            <ListView ItemsSource="{Binding Parens}" DockPanel.Dock="Top" 
+                      SelectedItem="{Binding Selected, Mode=Twoway}">
             <ListView.View>
                 <GridView>
                         <GridViewColumn Header="前" DisplayMemberBinding="{Binding start, UpdateSourceTrigger=PropertyChanged}"></GridViewColumn>
@@ -57,17 +52,18 @@
             <TextBlock Text="新規登録" HorizontalAlignment="Center" Margin="10"></TextBlock>
             <DockPanel Margin="2">
                 <TextBlock Text="前記号   :  " VerticalAlignment="Center" x:Name="Paren_Start"></TextBlock>
-                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.start}"></TextBox>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding NewParen.start}"></TextBox>
             </DockPanel>
             <DockPanel Margin="2">
                 <TextBlock Text="後記号   :  " VerticalAlignment="Center" x:Name="Paren_End" ></TextBlock>
-                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.end}"></TextBox>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding NewParen.end}"></TextBox>
             </DockPanel>
             <DockPanel Margin="2">
                 <TextBlock Text="末尾記号:  " VerticalAlignment="Center"></TextBlock>
-                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding AppContext.SelectedParen.extra}"></TextBox>
+                <TextBox HorizontalAlignment="Center" Width="50" Text="{Binding NewParen.extra}"></TextBox>
             </DockPanel>
-            <Button Content ="新規登録" Margin="20,10,20,0" Command="{Binding AddParenCom}">
+            <Button Content ="新規登録" Margin="20,10,20,0" 
+                    Command="{Binding AddParenRelay}" CommandParameter="{Binding NewParen}">
 
             </Button>
             <Grid>

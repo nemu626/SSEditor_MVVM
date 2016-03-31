@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace SSEditor.Model.ProjectModel
+namespace SSEditor.Model
 {
     public static class TextParser
     {
@@ -49,6 +46,10 @@ namespace SSEditor.Model.ProjectModel
                 }
             }
             return null;
+        }
+        public static Project AddTexttoProject(string text, Project project)
+        {
+            return project;
         }
         public static Project importProject(string text, Parentheses[] parens)
         {

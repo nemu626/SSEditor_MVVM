@@ -112,6 +112,7 @@ namespace SSEditor
         private void ParenSetting()
         {
             var dlg = new View.ParenOption();
+            vm.setP();
             dlg.ShowDialog();
         }
 

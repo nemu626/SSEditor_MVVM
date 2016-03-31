@@ -4,46 +4,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SSEditor.ViewModel.Commands
 {
-    public class ParenCommand : UndoRedoIcommand
+    public abstract class ParenCommand : ICommand
     {
-        protected TabContext tabcontext;
-        protected Parentheses backup;
-        protected int backupidx;
 
-        protected ObservableCollection<Parentheses> List
-        {
-            get { return tabcontext.Project.parens; }
-            set { tabcontext.Project.parens = value; }
-        }
-        protected Parentheses Selected
-        {
-            get { return tabcontext.Context.SelectedParen; }
-            set { tabcontext.Context.SelectedParen = value; }
-        }
+        protected ObservableCollection<Parentheses> List { get; set; }
 
         public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object parameter)
+        public ParenCommand(ObservableCollection<Parentheses> parens)
         {
-            throw new NotImplementedException();
+            List = parens;
         }
-
-        public void Execute(object parameter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Redo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Undo()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract bool CanExecute(object parameter);
+        public abstract void Execute(object parameter);
     }
+
 }

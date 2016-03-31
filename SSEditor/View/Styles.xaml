@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SSEditor">
+    <Style x:Key="WindowUITheme" TargetType="Window">
+        <Setter Property="Background" Value="{Binding AppTheme.UI_BackGroundHex}"></Setter>
+        <Setter Property="Foreground" Value="{Binding AppTheme.UI_ForeGroundHex}"></Setter>
+    </Style>
+    <Style x:Key="ButtonTheme" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{Binding AppTheme.Button_BackGroundHex}"></Setter>
+        <Setter Property="Foreground" Value="{Binding AppTheme.Button_ForeGroundHex}"></Setter>
+    </Style>
+    <Style x:Key="ComboBoxTheme" TargetType="{x:Type ComboBox}">
+        <Setter Property="Background" Value="{Binding AppTheme.Contols_BackGroundHex}"></Setter>
+        <Setter Property="Foreground" Value="{Binding AppTheme.Contols_ForeGroundHex}"></Setter>
+    </Style>
+    <Style x:Key="PlainEditorTheme" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{Binding Apptheme.PlainEditor_BackGroundHex}"></Setter>
+        <Setter Property="Foreground" Value="{Binding Apptheme.PlainEditor_ForeGroundHex}"></Setter>
+    </Style>
+    <Style x:Key="TextBlockTheme" TargetType="{x:Type TextBlock}">
+        <Setter Property="Background" Value="{Binding Apptheme.UI_BackGroundHex}"></Setter>
+        <Setter Property="Foreground" Value="{Binding Apptheme.UI_ForeGroundHex}"></Setter>
+    </Style>
+    
+</ResourceDictionary>

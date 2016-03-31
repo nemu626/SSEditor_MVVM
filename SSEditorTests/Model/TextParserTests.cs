@@ -1,12 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SSEditor.Model.ProjectModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SSEditor.Model.ProjectModel.Tests
+namespace SSEditor.Model.Tests
 {
     [TestClass()]
     public class TextParserTests

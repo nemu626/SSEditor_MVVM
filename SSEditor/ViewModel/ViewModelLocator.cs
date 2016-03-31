@@ -43,6 +43,7 @@ namespace SSEditor.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ParenOptionViewModel>();
         }
 
         public MainViewModel Main
@@ -50,6 +51,13 @@ namespace SSEditor.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+        public ParenOptionViewModel ParenOption
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ParenOptionViewModel>();
             }
         }
         

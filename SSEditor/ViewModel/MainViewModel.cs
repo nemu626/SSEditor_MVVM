@@ -261,5 +261,10 @@ namespace SSEditor.ViewModel
         }
         #endregion
         #endregion
+
+        public void setP()
+        {
+            MessengerInstance.Send<ParensCollectionMessage>(new ParensCollectionMessage(Project.parens));
+        }
     }
 }

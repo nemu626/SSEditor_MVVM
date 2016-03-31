@@ -15,27 +15,10 @@
         mc:Ignorable="d"
         Title="{Binding Project.title}" 
         Height="{Binding AppOption.Window_Heigth}" Width="{Binding AppOption.Window_Width}"
-        Name="mainWindow">
-
-
-    <Window.Style>
-        <Style TargetType="{x:Type Window}">
-            <Setter Property="Background" Value="{Binding AppTheme.UI_BackGroundHex}"></Setter>
-            <Setter Property="Foreground" Value="{Binding AppTheme.UI_ForeGroundHex}"></Setter>
-        </Style>
-
-    </Window.Style>
-
+        Name="mainWindow"
+        Style="{DynamicResource WindowUITheme}">
     <Window.Resources>
-        <Style x:Key="ButtonTheme" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{Binding AppTheme.Button_BackGroundHex}"></Setter>
-            <Setter Property="Foreground" Value="{Binding AppTheme.Button_ForeGroundHex}"></Setter>
-        </Style>
-        <Style x:Key="ComboBoxTheme" TargetType="{x:Type ComboBox}">
-            <Setter Property="Background" Value="{Binding AppTheme.Contols_BackGroundHex}"></Setter>
-            <Setter Property="Foreground" Value="{Binding AppTheme.Contols_ForeGroundHex}"></Setter>
-        </Style>
-
+        <ResourceDictionary Source="View/Styles.xaml"></ResourceDictionary>
     </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
